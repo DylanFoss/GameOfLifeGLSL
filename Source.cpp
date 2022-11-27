@@ -268,7 +268,7 @@ int main()
 		if (elapsedTime.count() > 0.05f)
 		{
 
-			glBindFramebuffer(GL_FRAMEBUFFER, fb);
+			glBindFramebuffer(GL_FRAMEBUFFER, noiseBuffer);
 
 			glPushAttrib(GL_VIEWPORT_BIT);
 			glViewport(0, 0, GameSize, GameSize);
@@ -279,7 +279,7 @@ int main()
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 			glActiveTexture(GL_TEXTURE0+frontTexture);
-			glBindTexture(GL_TEXTURE_2D, fb);
+			glBindTexture(GL_TEXTURE_2D, noiseBuffer);
 
 			glPopAttrib();
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -289,9 +289,8 @@ int main()
 			t1 = t2;
 		}
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, renderTarget);
-
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, 800, 800);
 		GLCall(glUseProgram(shader));
 		GLCall(glUniform1f(glGetUniformLocation(shader, "u_TexIndex"), backTexture));
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
