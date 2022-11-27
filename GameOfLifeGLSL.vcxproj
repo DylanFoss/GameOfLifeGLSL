@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="GoL.frag.shader" />
+    <None Include="noise.frag.shader" />
     <None Include="test.frag.shader" />
     <None Include="test.vert.shader" />
   </ItemGroup>

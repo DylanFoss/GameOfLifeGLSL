@@ -35,6 +35,9 @@
     <None Include="GoL.frag.shader">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="noise.frag.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLErrorHandler.h">

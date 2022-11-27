@@ -1,32 +1,44 @@
 #shader fragment
 #version 330 core
 
-layout(location = 0) out  gl_FragColor;
+layout(location = 0) out vec4 o_Color;
 
-uniform sampler2D state;
-uniform vec2 scale;
+in vec2 v_TexCoord;
 
-int get(int x, int y) {
-    return int(texture2D(state, (gl_FragCoord.xy + vec2(x, y)) / scale).r);
+uniform sampler2D u_State;
+uniform vec2 u_Scale;
+
+int Get(int x, int y)
+{
+	vec4 texColor = texture(u_State, (v_TexCoord+(vec2(x,y)/u_Scale)));
+	return texColor.r > 0.5 ? 1 : 0;
 }
 
 void main() {
-    int sum = get(-1, -1) +
-        get(-1, 0) +
-        get(-1, 1) +
-        get(0, -1) +
-        get(0, 1) +
-        get(1, -1) +
-        get(1, 0) +
-        get(1, 1);
-    if (sum == 3) {
-        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+
+    int sum = Get(-1, -1) +
+        Get(-1, 0) +
+        Get(-1, 1) +
+        Get(0, -1) +
+        Get(0, 1) +
+        Get(1, -1) +
+        Get(1, 0) +
+        Get(1, 1);
+
+    if (sum == 3)
+    {
+       o_Color = vec4(vec3(1.0), 1.0);
     }
-    else if (sum == 2) {
-        float current = float(get(0, 0));
-        gl_FragColor = vec4(current, current, current, 1.0);
+    else if (sum == 2)
+    {
+        float current = float(Get(0, 0));
+        o_Color = vec4(vec3(current), 1.0);
     }
-    else {
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    else
+    {
+        o_Color = vec4(vec3(0.0), 1.0);
     }
+
+    //vec4 texColor = texture(u_State, v_TexCoord + vec2(1, 0)/80);
+    //o_Color = texColor;
 }
