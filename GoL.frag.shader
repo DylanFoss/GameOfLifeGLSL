@@ -38,7 +38,4 @@ void main() {
     {
         o_Color = vec4(vec3(0.0), 1.0);
     }
-
-    //vec4 texColor = texture(u_State, v_TexCoord + vec2(1, 0)/80);
-    //o_Color = texColor;
 }
