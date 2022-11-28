@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -12,6 +13,7 @@
 #include "GLErrorHandler.h"
 
 #define GameSize 800
+#define WindowSize 800
 
 struct ShaderSource
 {
@@ -94,6 +96,58 @@ struct Vertex
 	glm::vec2 TexCoord;
 };
 
+struct VP
+{
+	glm::mat4 projectionInital = glm::ortho(0.0f, 800.0f, 0.0f, 800.0f, -1.0f, 1.0f);
+	glm::mat4 viewInital = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+
+	glm::mat4 projection = projectionInital;
+	glm::mat4 view = viewInital;
+};
+
+
+VP vp;
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (key == GLFW_KEY_W && action == GLFW_REPEAT)
+	{
+		vp.view = glm::translate(vp.view, glm::vec3(0, -0.01, 0));
+	}
+
+	if (key == GLFW_KEY_S && action == GLFW_REPEAT)
+	{
+		vp.view = glm::translate(vp.view, glm::vec3(0, 0.01, 0));
+	}
+
+	if (key == GLFW_KEY_A && action == GLFW_REPEAT)
+	{
+		vp.view = glm::translate(vp.view, glm::vec3(0.01, 0, 0));
+	}
+
+	if (key == GLFW_KEY_D && action == GLFW_REPEAT)
+	{
+		vp.view = glm::translate(vp.view, glm::vec3(-0.01, 0, 0));
+	}
+
+	if (key == GLFW_KEY_Q && action == GLFW_REPEAT)
+	{
+		vp.view = glm::scale(vp.view, glm::vec3(0.8,0.8,0));
+	}
+
+	if (key == GLFW_KEY_E && action == GLFW_REPEAT)
+	{
+		vp.view = glm::scale(vp.view, glm::vec3(1.2, 1.2, 0));
+	}
+
+	if (key == GLFW_KEY_R && action == GLFW_PRESS)
+	{
+		vp.view = vp.viewInital;
+		vp.projection = vp.projectionInital;
+	}
+}
+
+
 int main()
 {
 	GLFWwindow* window;
@@ -106,7 +160,7 @@ int main()
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(800, 800, "Game of Life", NULL, NULL);
+	window = glfwCreateWindow(WindowSize, WindowSize, "Game of Life", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -117,23 +171,34 @@ int main()
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1); // 1 to cap to refresh rate
 
+	glfwSetKeyCallback(window, key_callback);
+
 	std::cout << glGetString(GL_VERSION) << '\n';
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.20f, 1.0f);
+
+	glOrtho(0, WindowSize, 0, WindowSize, -1, 1);
 
 	if (glewInit() != GLEW_OK)
 		std::cout << "ERROR!" << std::endl;
 
 	//openGL
 
-	Vertex vertices[4] = {
+	Vertex vertices2[4] = {
 		{{-1.0f, -1.0f},	{0.0f, 0.0f}},
 		{{ 1.0f, -1.0f},	{1.0f, 0.0f}},
 		{{ 1.0f,  1.0f},	{1.0f, 1.0f}},
 		{{-1.0f,  1.0f},	{0.0f, 1.0f}}
+	};
+
+	Vertex vertices[4] = {
+		{{0, 0},		{0.0f, 0.0f}},
+		{{ 800, 0},		{1.0f, 0.0f}},
+		{{ 800,  800},	{1.0f, 1.0f}},
+		{{0,  800},		{0.0f, 1.0f}}
 	};
 
 	unsigned int indices[6] = { 0, 1, 2, 2, 3, 0 };
@@ -157,6 +222,25 @@ int main()
 	GLCall(glEnableVertexArrayAttrib(VA, 1));
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord));
 
+	unsigned int VA2;
+	glGenVertexArrays(1, &VA2);
+	glBindVertexArray(VA2);
+
+	unsigned int VB2;
+	glGenBuffers(1, &VB2);
+	glBindBuffer(GL_ARRAY_BUFFER, VB2);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4, vertices2, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(VA2);
+
+	GLCall(glEnableVertexArrayAttrib(VA2, 0));
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
+
+	GLCall(glEnableVertexArrayAttrib(VA2, 1));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord));
+
+	glBindBuffer(GL_ARRAY_BUFFER, VB);
+
 	unsigned int IB;
 
 	GLCall(glCreateBuffers(1, &IB));
@@ -179,7 +263,7 @@ int main()
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 800, 800, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr))
+	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WindowSize, WindowSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr))
 
 	glActiveTexture(GL_TEXTURE0+1);
 	GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &frontTex));
@@ -202,8 +286,13 @@ int main()
 
 	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTarget, 0);
 
-	GLCall(glBindTexture(GL_TEXTURE_2D, frontTex));
-	GLCall(glBindTexture(GL_TEXTURE_2D, backTex));
+	//GLCall(glBindTexture(GL_TEXTURE_2D, frontTex));
+	//GLCall(glBindTexture(GL_TEXTURE_2D, backTex));
+
+	glm::mat4 model = glm::mat4(1.0f);
+	//model = glm::scale(model, glm::vec3(1.0f, 1.0f, 0));
+
+	glm::mat4 mvp = vp.projection * vp.view * model;
 	GLuint shader = CreateShader("basic.vert.shader", "basic.frag.shader");
 
 	GLCall(glUseProgram(shader));
@@ -211,16 +300,16 @@ int main()
 	auto loc = glGetUniformLocation(shader, "u_Textures");
 	GLCall(glUniform1iv(loc, 3, sampler));
 	GLCall(glUniform1f(glGetUniformLocation(shader, "u_TexIndex"), 0));
-	GLCall(glUniform1f(glGetUniformLocation(shader, "u_Scale"), 100));
+	GLCall(glUniformMatrix4fv(glGetUniformLocation(shader, "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
 
-	GLuint GoL = CreateShader("basic.vert.shader", "GoL.frag.shader");
+	GLuint GoL = CreateShader("GoL.vert.shader", "GoL.frag.shader");
 	GLCall(glUseProgram(GoL));
 	GLCall(glUniform1i(glGetUniformLocation(GoL, "u_State"), 1));
 	GLCall(glUniform2f(glGetUniformLocation(GoL, "u_Scale"), GameSize, GameSize));
 
 	//inital noise
 
-	GLuint noise = CreateShader("basic.vert.shader", "noise.frag.shader");
+	GLuint noise = CreateShader("noise.vert.shader", "noise.frag.shader");
 	GLCall(glUseProgram(noise));
 
 	GLuint noiseBuffer;
@@ -247,7 +336,7 @@ int main()
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fb);
 	glPushAttrib(GL_VIEWPORT_BIT);
-	//glViewport(0, 0, 800, 800);
+	//glViewport(0, 0, WindowSize, WindowSize);
 
 	GLCall(glUseProgram(shader));
 	GLCall(glUniform1f(glGetUniformLocation(shader, "u_TexIndex"), 1));
@@ -261,6 +350,7 @@ int main()
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		t2 = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> elapsedTime = t2 - t1;
@@ -276,6 +366,9 @@ int main()
 			GLCall(glUseProgram(GoL));
 			GLCall(glUniform1i(glGetUniformLocation(GoL, "u_State"), backTexture));
 
+			glBindBuffer(GL_ARRAY_BUFFER, VB2);
+			glEnableVertexAttribArray(VA2);
+
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 			glActiveTexture(GL_TEXTURE0+frontTexture);
@@ -290,9 +383,14 @@ int main()
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, 800, 800);
+		glViewport(0, 0, WindowSize, WindowSize);
 		GLCall(glUseProgram(shader));
 		GLCall(glUniform1f(glGetUniformLocation(shader, "u_TexIndex"), backTexture));
+
+		glm::mat4 mvp = vp.projection * vp.view * model;
+		GLCall(glUniformMatrix4fv(glGetUniformLocation(shader, "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
+		glBindBuffer(GL_ARRAY_BUFFER, VB);
+		glEnableVertexAttribArray(VA);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 		/* Swap front and back buffers */

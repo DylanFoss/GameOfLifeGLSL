@@ -150,9 +150,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="GoL.frag.shader" />
+    <None Include="GoL.vert.shader" />
     <None Include="noise.frag.shader" />
     <None Include="basic.frag.shader" />
     <None Include="basic.vert.shader" />
+    <None Include="noise.vert.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLErrorHandler.h" />
