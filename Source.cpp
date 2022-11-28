@@ -204,7 +204,7 @@ int main()
 
 	GLCall(glBindTexture(GL_TEXTURE_2D, frontTex));
 	GLCall(glBindTexture(GL_TEXTURE_2D, backTex));
-	GLuint shader = CreateShader("test.vert.shader", "test.frag.shader");
+	GLuint shader = CreateShader("basic.vert.shader", "basic.frag.shader");
 
 	GLCall(glUseProgram(shader));
 	int sampler[3] = {0,1,2};
@@ -213,14 +213,14 @@ int main()
 	GLCall(glUniform1f(glGetUniformLocation(shader, "u_TexIndex"), 0));
 	GLCall(glUniform1f(glGetUniformLocation(shader, "u_Scale"), 100));
 
-	GLuint GoL = CreateShader("test.vert.shader", "GoL.frag.shader");
+	GLuint GoL = CreateShader("basic.vert.shader", "GoL.frag.shader");
 	GLCall(glUseProgram(GoL));
 	GLCall(glUniform1i(glGetUniformLocation(GoL, "u_State"), 1));
 	GLCall(glUniform2f(glGetUniformLocation(GoL, "u_Scale"), GameSize, GameSize));
 
 	//inital noise
 
-	GLuint noise = CreateShader("test.vert.shader", "noise.frag.shader");
+	GLuint noise = CreateShader("basic.vert.shader", "noise.frag.shader");
 	GLCall(glUseProgram(noise));
 
 	GLuint noiseBuffer;
