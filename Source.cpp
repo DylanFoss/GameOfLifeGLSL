@@ -12,8 +12,11 @@
 
 #include "GLErrorHandler.h"
 
-#define GameSize 800
-#define WindowSize 800
+//#define GameSize 400
+//#define WindowSize 800
+
+constexpr int GameSize = 400;
+constexpr int WindowSize = 800;
 
 struct ShaderSource
 {
@@ -112,32 +115,36 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
 	if (key == GLFW_KEY_W && action == GLFW_REPEAT)
 	{
-		vp.view = glm::translate(vp.view, glm::vec3(0, -0.01, 0));
+		vp.view = glm::translate(vp.view, glm::vec3(0, -10, 0));
 	}
 
 	if (key == GLFW_KEY_S && action == GLFW_REPEAT)
 	{
-		vp.view = glm::translate(vp.view, glm::vec3(0, 0.01, 0));
+		vp.view = glm::translate(vp.view, glm::vec3(0, 10, 0));
 	}
 
 	if (key == GLFW_KEY_A && action == GLFW_REPEAT)
 	{
-		vp.view = glm::translate(vp.view, glm::vec3(0.01, 0, 0));
+		vp.view = glm::translate(vp.view, glm::vec3(10, 0, 0));
 	}
 
 	if (key == GLFW_KEY_D && action == GLFW_REPEAT)
 	{
-		vp.view = glm::translate(vp.view, glm::vec3(-0.01, 0, 0));
+		vp.view = glm::translate(vp.view, glm::vec3(-10, 0, 0));
 	}
 
 	if (key == GLFW_KEY_Q && action == GLFW_REPEAT)
 	{
-		vp.view = glm::scale(vp.view, glm::vec3(0.8,0.8,0));
+		vp.view = glm::translate(vp.view, glm::vec3(400,400,0));
+		vp.view = glm::scale(vp.view, glm::vec3(0.8,0.8,1.0f));
+		vp.view = glm::translate(vp.view, glm::vec3(-400, -400, 0));
 	}
 
 	if (key == GLFW_KEY_E && action == GLFW_REPEAT)
 	{
-		vp.view = glm::scale(vp.view, glm::vec3(1.2, 1.2, 0));
+		vp.view = glm::translate(vp.view, glm::vec3(400, 400, 0));
+		vp.view = glm::scale(vp.view, glm::vec3(1.2, 1.2, 1.0f));
+		vp.view = glm::translate(vp.view, glm::vec3(-400, -400, 0));
 	}
 
 	if (key == GLFW_KEY_R && action == GLFW_PRESS)
@@ -180,7 +187,7 @@ int main()
 
 	glClearColor(0.0f, 0.0f, 0.20f, 1.0f);
 
-	glOrtho(0, WindowSize, 0, WindowSize, -1, 1);
+	//glOrtho(0, WindowSize, 0, WindowSize, -1, 1);
 
 	if (glewInit() != GLEW_OK)
 		std::cout << "ERROR!" << std::endl;
@@ -196,8 +203,8 @@ int main()
 
 	Vertex vertices[4] = {
 		{{0, 0},		{0.0f, 0.0f}},
-		{{ 800, 0},		{1.0f, 0.0f}},
-		{{ 800,  800},	{1.0f, 1.0f}},
+		{{800, 0},		{1.0f, 0.0f}},
+		{{800,  800},	{1.0f, 1.0f}},
 		{{0,  800},		{0.0f, 1.0f}}
 	};
 
@@ -209,6 +216,12 @@ int main()
 
 	unsigned int VB;
 	glGenBuffers(1, &VB);
+
+	unsigned int IB;
+
+	GLCall(glCreateBuffers(1, &IB));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB));
+	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) , indices, GL_STATIC_DRAW));
 
 	glBindBuffer(GL_ARRAY_BUFFER,VB);
 
@@ -226,6 +239,9 @@ int main()
 	glGenVertexArrays(1, &VA2);
 	glBindVertexArray(VA2);
 
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB));
+	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
+
 	unsigned int VB2;
 	glGenBuffers(1, &VB2);
 	glBindBuffer(GL_ARRAY_BUFFER, VB2);
@@ -239,13 +255,8 @@ int main()
 	GLCall(glEnableVertexArrayAttrib(VA2, 1));
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord));
 
-	glBindBuffer(GL_ARRAY_BUFFER, VB);
+	//glBindBuffer(GL_ARRAY_BUFFER, VB);
 
-	unsigned int IB;
-
-	GLCall(glCreateBuffers(1, &IB));
-	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB));
-	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) , indices, GL_STATIC_DRAW));
 
 	GLuint fb;
 	glGenFramebuffers(1, &fb);
@@ -367,7 +378,7 @@ int main()
 			GLCall(glUniform1i(glGetUniformLocation(GoL, "u_State"), backTexture));
 
 			glBindBuffer(GL_ARRAY_BUFFER, VB2);
-			glEnableVertexAttribArray(VA2);
+			glBindVertexArray(VA2);
 
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
@@ -389,9 +400,10 @@ int main()
 
 		glm::mat4 mvp = vp.projection * vp.view * model;
 		GLCall(glUniformMatrix4fv(glGetUniformLocation(shader, "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
+		//glBindBuffer(GL_ARRAY_BUFFER, VB);
+		glBindVertexArray(VA);
 		glBindBuffer(GL_ARRAY_BUFFER, VB);
-		glEnableVertexAttribArray(VA);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
