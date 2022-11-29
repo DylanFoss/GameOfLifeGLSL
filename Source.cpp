@@ -12,6 +12,8 @@
 
 #include "GLErrorHandler.h"
 
+#include "GameOfLife.h"
+
 //#define GameSize 400
 //#define WindowSize 800
 
@@ -157,261 +159,265 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 int main()
 {
-	GLFWwindow* window;
+	//GLFWwindow* window;
 
-	/* Initialize the library */
-	if (!glfwInit())
-		return -1;
+	///* Initialize the library */
+	//if (!glfwInit())
+	//	return -1;
 
-	glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+	//glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
+	//glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(WindowSize, WindowSize, "Game of Life", NULL, NULL);
-	if (!window)
-	{
-		glfwTerminate();
-		return -1;
-	}
+	///* Create a windowed mode window and its OpenGL context */
+	//window = glfwCreateWindow(WindowSize, WindowSize, "Game of Life", NULL, NULL);
+	//if (!window)
+	//{
+	//	glfwTerminate();
+	//	return -1;
+	//}
 
-	/* Make the window's context current */
-	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1); // 1 to cap to refresh rate
+	///* Make the window's context current */
+	//glfwMakeContextCurrent(window);
+	//glfwSwapInterval(1); // 1 to cap to refresh rate
 
-	glfwSetKeyCallback(window, key_callback);
+	//glfwSetKeyCallback(window, key_callback);
 
-	std::cout << glGetString(GL_VERSION) << '\n';
+	//std::cout << glGetString(GL_VERSION) << '\n';
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glEnable(GL_BLEND);
 
-	glClearColor(0.0f, 0.0f, 0.20f, 1.0f);
+	//glClearColor(0.0f, 0.0f, 0.20f, 1.0f);
 
-	//glOrtho(0, WindowSize, 0, WindowSize, -1, 1);
+	////glOrtho(0, WindowSize, 0, WindowSize, -1, 1);
 
-	if (glewInit() != GLEW_OK)
-		std::cout << "ERROR!" << std::endl;
+	//if (glewInit() != GLEW_OK)
+	//	std::cout << "ERROR!" << std::endl;
 
-	//openGL
+	////openGL
 
-	Vertex vertices2[4] = {
-		{{-1.0f, -1.0f},	{0.0f, 0.0f}},
-		{{ 1.0f, -1.0f},	{1.0f, 0.0f}},
-		{{ 1.0f,  1.0f},	{1.0f, 1.0f}},
-		{{-1.0f,  1.0f},	{0.0f, 1.0f}}
-	};
+	//Vertex vertices2[4] = {
+	//	{{-1.0f, -1.0f},	{0.0f, 0.0f}},
+	//	{{ 1.0f, -1.0f},	{1.0f, 0.0f}},
+	//	{{ 1.0f,  1.0f},	{1.0f, 1.0f}},
+	//	{{-1.0f,  1.0f},	{0.0f, 1.0f}}
+	//};
 
-	Vertex vertices[4] = {
-		{{0, 0},		{0.0f, 0.0f}},
-		{{800, 0},		{1.0f, 0.0f}},
-		{{800,  800},	{1.0f, 1.0f}},
-		{{0,  800},		{0.0f, 1.0f}}
-	};
+	//Vertex vertices[4] = {
+	//	{{0, 0},		{0.0f, 0.0f}},
+	//	{{800, 0},		{1.0f, 0.0f}},
+	//	{{800,  800},	{1.0f, 1.0f}},
+	//	{{0,  800},		{0.0f, 1.0f}}
+	//};
 
-	unsigned int indices[6] = { 0, 1, 2, 2, 3, 0 };
+	//unsigned int indices[6] = { 0, 1, 2, 2, 3, 0 };
 
-	unsigned int VA;
-	glGenVertexArrays(1, &VA);
-	glBindVertexArray(VA);
+	//unsigned int VA;
+	//glGenVertexArrays(1, &VA);
+	//glBindVertexArray(VA);
 
-	unsigned int VB;
-	glGenBuffers(1, &VB);
+	//unsigned int VB;
+	//glGenBuffers(1, &VB);
 
-	unsigned int IB;
+	//unsigned int IB;
 
-	GLCall(glCreateBuffers(1, &IB));
-	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB));
-	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) , indices, GL_STATIC_DRAW));
+	//GLCall(glCreateBuffers(1, &IB));
+	//GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB));
+	//GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) , indices, GL_STATIC_DRAW));
 
-	glBindBuffer(GL_ARRAY_BUFFER,VB);
+	//glBindBuffer(GL_ARRAY_BUFFER,VB);
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*4, vertices, GL_STATIC_DRAW);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*4, vertices, GL_STATIC_DRAW);
 
-	glEnableVertexAttribArray(VA);
+	//glEnableVertexAttribArray(VA);
 
-	GLCall(glEnableVertexArrayAttrib(VA, 0));
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
+	//GLCall(glEnableVertexArrayAttrib(VA, 0));
+	//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
 
-	GLCall(glEnableVertexArrayAttrib(VA, 1));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord));
+	//GLCall(glEnableVertexArrayAttrib(VA, 1));
+	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord));
 
-	unsigned int VA2;
-	glGenVertexArrays(1, &VA2);
-	glBindVertexArray(VA2);
+	//unsigned int VA2;
+	//glGenVertexArrays(1, &VA2);
+	//glBindVertexArray(VA2);
 
-	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB));
-	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
+	//GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB));
+	//GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
 
-	unsigned int VB2;
-	glGenBuffers(1, &VB2);
-	glBindBuffer(GL_ARRAY_BUFFER, VB2);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4, vertices2, GL_STATIC_DRAW);
+	//unsigned int VB2;
+	//glGenBuffers(1, &VB2);
+	//glBindBuffer(GL_ARRAY_BUFFER, VB2);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4, vertices2, GL_STATIC_DRAW);
 
-	glEnableVertexAttribArray(VA2);
+	//glEnableVertexAttribArray(VA2);
 
-	GLCall(glEnableVertexArrayAttrib(VA2, 0));
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
+	//GLCall(glEnableVertexArrayAttrib(VA2, 0));
+	//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
 
-	GLCall(glEnableVertexArrayAttrib(VA2, 1));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord));
+	//GLCall(glEnableVertexArrayAttrib(VA2, 1));
+	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord));
 
-	//glBindBuffer(GL_ARRAY_BUFFER, VB);
+	////glBindBuffer(GL_ARRAY_BUFFER, VB);
 
 
-	GLuint fb;
-	glGenFramebuffers(1, &fb);
-	glBindFramebuffer(GL_FRAMEBUFFER, fb);
+	//GLuint fb;
+	//glGenFramebuffers(1, &fb);
+	//glBindFramebuffer(GL_FRAMEBUFFER, fb);
 
-	GLuint renderTarget;
+	//GLuint renderTarget;
 
-	GLuint frontTex;
-	GLuint backTex;
+	//GLuint frontTex;
+	//GLuint backTex;
 
-	glActiveTexture(GL_TEXTURE0);
-	GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &renderTarget));
-	GLCall(glBindTexture(GL_TEXTURE_2D, renderTarget));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WindowSize, WindowSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr))
+	//glActiveTexture(GL_TEXTURE0);
+	//GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &renderTarget));
+	//GLCall(glBindTexture(GL_TEXTURE_2D, renderTarget));
+	//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+	//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+	//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+	//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+	//GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WindowSize, WindowSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr))
 
-	glActiveTexture(GL_TEXTURE0+1);
-	GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &frontTex));
-	GLCall(glBindTexture(GL_TEXTURE_2D, frontTex));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-	//uint32_t colour = 0xffffffff;
-	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, GameSize, GameSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr))
-	
-	glActiveTexture(GL_TEXTURE0 + 2);
-	GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &backTex));
-	GLCall(glBindTexture(GL_TEXTURE_2D, backTex));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, GameSize, GameSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr));
-
-	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTarget, 0);
-
+	//glActiveTexture(GL_TEXTURE0+1);
+	//GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &frontTex));
 	//GLCall(glBindTexture(GL_TEXTURE_2D, frontTex));
+	//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+	//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+	//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+	//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+	//GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, GameSize, GameSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr))
+	//
+	//glActiveTexture(GL_TEXTURE0 + 2);
+	//GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &backTex));
 	//GLCall(glBindTexture(GL_TEXTURE_2D, backTex));
+	//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+	//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+	//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+	//GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+	//GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, GameSize, GameSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr));
 
-	glm::mat4 model = glm::mat4(1.0f);
-	//model = glm::scale(model, glm::vec3(1.0f, 1.0f, 0));
+	//glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTarget, 0);
 
-	glm::mat4 mvp = vp.projection * vp.view * model;
-	GLuint shader = CreateShader("basic.vert.shader", "basic.frag.shader");
+	////GLCall(glBindTexture(GL_TEXTURE_2D, frontTex));
+	////GLCall(glBindTexture(GL_TEXTURE_2D, backTex));
 
-	GLCall(glUseProgram(shader));
-	int sampler[3] = {0,1,2};
-	auto loc = glGetUniformLocation(shader, "u_Textures");
-	GLCall(glUniform1iv(loc, 3, sampler));
-	GLCall(glUniform1f(glGetUniformLocation(shader, "u_TexIndex"), 0));
-	GLCall(glUniformMatrix4fv(glGetUniformLocation(shader, "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
+	//glm::mat4 model = glm::mat4(1.0f);
+	////model = glm::scale(model, glm::vec3(1.0f, 1.0f, 0));
 
-	GLuint GoL = CreateShader("GoL.vert.shader", "GoL.frag.shader");
-	GLCall(glUseProgram(GoL));
-	GLCall(glUniform1i(glGetUniformLocation(GoL, "u_State"), 1));
-	GLCall(glUniform2f(glGetUniformLocation(GoL, "u_Scale"), GameSize, GameSize));
+	//glm::mat4 mvp = vp.projection * vp.view * model;
+	//GLuint shader = CreateShader("basic.vert.shader", "basic.frag.shader");
 
-	//inital noise
+	//GLCall(glUseProgram(shader));
+	//int sampler[3] = {0,1,2};
+	//auto loc = glGetUniformLocation(shader, "u_Textures");
+	//GLCall(glUniform1iv(loc, 3, sampler));
+	//GLCall(glUniform1f(glGetUniformLocation(shader, "u_TexIndex"), 0));
+	//GLCall(glUniformMatrix4fv(glGetUniformLocation(shader, "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
 
-	GLuint noise = CreateShader("noise.vert.shader", "noise.frag.shader");
-	GLCall(glUseProgram(noise));
+	//GLuint GoL = CreateShader("GoL.vert.shader", "GoL.frag.shader");
+	//GLCall(glUseProgram(GoL));
+	//GLCall(glUniform1i(glGetUniformLocation(GoL, "u_State"), 1));
+	//GLCall(glUniform2f(glGetUniformLocation(GoL, "u_Scale"), GameSize, GameSize));
 
-	GLuint noiseBuffer;
-	glGenFramebuffers(1, &noiseBuffer);
-	glBindFramebuffer(GL_FRAMEBUFFER, noiseBuffer);
+	////inital noise
 
-	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frontTex, 0);
+	//GLuint noise = CreateShader("noise.vert.shader", "noise.frag.shader");
+	//GLCall(glUseProgram(noise));
 
-	glPushAttrib(GL_VIEWPORT_BIT);
-	glViewport(0, 0, GameSize, GameSize);
+	//GLuint noiseBuffer;
+	//glGenFramebuffers(1, &noiseBuffer);
+	//glBindFramebuffer(GL_FRAMEBUFFER, noiseBuffer);
 
-	GLCall(glUseProgram(noise));
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+	//glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frontTex, 0);
 
-	glPopAttrib();
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//glPushAttrib(GL_VIEWPORT_BIT);
+	//glViewport(0, 0, GameSize, GameSize);
 
-	//Time keeping
+	//GLCall(glUseProgram(noise));
+	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
-	std::chrono::time_point <std::chrono::high_resolution_clock> t1, t2;
-	t1 = std::chrono::high_resolution_clock::now();
+	//glPopAttrib();
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	//show inital noise
+	////Time keeping
 
-	glBindFramebuffer(GL_FRAMEBUFFER, fb);
-	glPushAttrib(GL_VIEWPORT_BIT);
-	//glViewport(0, 0, WindowSize, WindowSize);
+	//std::chrono::time_point <std::chrono::high_resolution_clock> t1, t2;
+	//t1 = std::chrono::high_resolution_clock::now();
 
-	GLCall(glUseProgram(shader));
-	GLCall(glUniform1f(glGetUniformLocation(shader, "u_TexIndex"), 1));
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+	////show inital noise
 
-	glPopAttrib();
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//glBindFramebuffer(GL_FRAMEBUFFER, fb);
+	//glPushAttrib(GL_VIEWPORT_BIT);
+	////glViewport(0, 0, WindowSize, WindowSize);
 
-	unsigned int backTexture = 1;
-	unsigned int frontTexture = 2;
-	/* Loop until the user closes the window */
-	while (!glfwWindowShouldClose(window))
-	{
-		glClear(GL_COLOR_BUFFER_BIT);
+	//GLCall(glUseProgram(shader));
+	//GLCall(glUniform1f(glGetUniformLocation(shader, "u_TexIndex"), 1));
+	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
-		t2 = std::chrono::high_resolution_clock::now();
-		std::chrono::duration<double> elapsedTime = t2 - t1;
+	//glPopAttrib();
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		if (elapsedTime.count() > 0.05f)
-		{
+	//unsigned int backTexture = 1;
+	//unsigned int frontTexture = 2;
+	///* Loop until the user closes the window */
+	//while (!glfwWindowShouldClose(window))
+	//{
+	//	glClear(GL_COLOR_BUFFER_BIT);
 
-			glBindFramebuffer(GL_FRAMEBUFFER, noiseBuffer);
+	//	t2 = std::chrono::high_resolution_clock::now();
+	//	std::chrono::duration<double> elapsedTime = t2 - t1;
 
-			glPushAttrib(GL_VIEWPORT_BIT);
-			glViewport(0, 0, GameSize, GameSize);
+	//	if (elapsedTime.count() > 0.05f)
+	//	{
 
-			GLCall(glUseProgram(GoL));
-			GLCall(glUniform1i(glGetUniformLocation(GoL, "u_State"), backTexture));
+	//		glBindFramebuffer(GL_FRAMEBUFFER, noiseBuffer);
 
-			glBindBuffer(GL_ARRAY_BUFFER, VB2);
-			glBindVertexArray(VA2);
+	//		glPushAttrib(GL_VIEWPORT_BIT);
+	//		glViewport(0, 0, GameSize, GameSize);
 
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+	//		GLCall(glUseProgram(GoL));
+	//		GLCall(glUniform1i(glGetUniformLocation(GoL, "u_State"), backTexture));
 
-			glActiveTexture(GL_TEXTURE0+frontTexture);
-			glBindTexture(GL_TEXTURE_2D, noiseBuffer);
+	//		glBindBuffer(GL_ARRAY_BUFFER, VB2);
+	//		glBindVertexArray(VA2);
 
-			glPopAttrib();
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
-			std::swap(backTexture, frontTexture);
+	//		glActiveTexture(GL_TEXTURE0+frontTexture);
+	//		glBindTexture(GL_TEXTURE_2D, noiseBuffer);
 
-			t1 = t2;
-		}
+	//		glPopAttrib();
+	//		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, WindowSize, WindowSize);
-		GLCall(glUseProgram(shader));
-		GLCall(glUniform1f(glGetUniformLocation(shader, "u_TexIndex"), backTexture));
+	//		std::swap(backTexture, frontTexture);
 
-		glm::mat4 mvp = vp.projection * vp.view * model;
-		GLCall(glUniformMatrix4fv(glGetUniformLocation(shader, "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
-		//glBindBuffer(GL_ARRAY_BUFFER, VB);
-		glBindVertexArray(VA);
-		glBindBuffer(GL_ARRAY_BUFFER, VB);
-		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+	//		t1 = t2;
+	//	}
 
-		/* Swap front and back buffers */
-		glfwSwapBuffers(window);
+	//	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//	glViewport(0, 0, WindowSize, WindowSize);
+	//	GLCall(glUseProgram(shader));
+	//	GLCall(glUniform1f(glGetUniformLocation(shader, "u_TexIndex"), backTexture));
 
-		/* Poll for and process events */
-		glfwPollEvents();
-	}
+	//	glm::mat4 mvp = vp.projection * vp.view * model;
+	//	GLCall(glUniformMatrix4fv(glGetUniformLocation(shader, "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
+	//	//glBindBuffer(GL_ARRAY_BUFFER, VB);
+	//	glBindVertexArray(VA);
+	//	glBindBuffer(GL_ARRAY_BUFFER, VB);
+	//	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
-	glfwTerminate();
+	//	/* Swap front and back buffers */
+	//	glfwSwapBuffers(window);
+
+	//	/* Poll for and process events */
+	//	glfwPollEvents();
+	//}
+
+	//glfwTerminate();
+	//return 0;
+
+	std::unique_ptr<GameOfLife> app = std::make_unique<GameOfLife>();
+	app->Run();
+
 	return 0;
 }

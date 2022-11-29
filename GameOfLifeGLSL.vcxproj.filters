@@ -16,6 +16,12 @@
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{c7136d3d-f648-4c66-9fb6-e3a42f6a2e2e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{f72e0b41-a089-4d0e-95e9-1154c50f4207}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GoL">
+      <UniqueIdentifier>{aedd7222-dad6-419b-91dc-551894fe9c51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -23,6 +29,15 @@
     </ClCompile>
     <ClCompile Include="GLErrorHandler.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOfLife.cpp">
+      <Filter>Source Files\GoL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -48,6 +63,18 @@
   <ItemGroup>
     <ClInclude Include="GLErrorHandler.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeStep.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOfLife.h">
+      <Filter>Source Files\GoL</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
