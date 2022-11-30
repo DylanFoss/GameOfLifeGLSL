@@ -18,7 +18,7 @@ int Application::Run()
 	while (m_Running)
 	{
 		auto start = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch());
-		float time = start.count();
+		float time = (float)start.count();
 		TimeStep timestep = time - m_LastFrameTime;
 		m_LastFrameTime = time;
 
