@@ -5,6 +5,9 @@
 #include "Window.h"
 #include "Timestep.h"
 
+#include "Event.h"
+#include "WindowEvent.h"
+
 class Application
 {
 public:
@@ -12,6 +15,8 @@ public:
 	virtual ~Application() = default;
 
 	int Run();
+
+	void OnEvent(Event& e);
 
 	virtual void Update(float deltaTime) = 0;
 	virtual void Draw(float deltaTime) = 0;
@@ -23,6 +28,8 @@ private:
 	float m_LastFrameTime = 0.0f;
 
 	static Application* s_Instance;
+
+	bool OnWindowClose(WindowCloseEvent& e);
 
 };
 

@@ -1,160 +1,160 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <chrono>
-
-#include "GLErrorHandler.h"
+//#include <GL/glew.h>
+//#include <GLFW/glfw3.h>
+//
+//#include "glm/glm.hpp"
+//#include "glm/gtc/matrix_transform.hpp"
+//
+//#include <iostream>
+//#include <fstream>
+//#include <string>
+//#include <sstream>
+//#include <chrono>
+//
+//#include "GLErrorHandler.h"
 
 #include "GameOfLife.h"
 
 //#define GameSize 400
 //#define WindowSize 800
 
-constexpr int GameSize = 400;
-constexpr int WindowSize = 800;
-
-struct ShaderSource
-{
-	uint32_t type;
-	std::string source;
-};
-
-ShaderSource ParseShader(const std::string& filepath)
-{
-	std::ifstream stream(filepath);
-
-	std::string line;
-	std::stringstream ss;
-	uint32_t type = GL_INVALID_ENUM;
-
-	while (std::getline(stream, line))
-	{
-		if (line.find("#shader") != std::string::npos)
-		{
-			if (line.find("vertex") != std::string::npos)
-				type = GL_VERTEX_SHADER;
-			else if (line.find("fragment") != std::string::npos)
-				type = GL_FRAGMENT_SHADER;
-		}
-		else
-		{
-			ss << line << '\n';
-		}
-	}
-
-	return { type, ss.str() };
-};
-
-GLuint CompileShader(const ShaderSource& shaderSource)
-{
-	unsigned int id = glCreateShader(shaderSource.type);
-	const char* src = shaderSource.source.c_str();
-	glShaderSource(id, 1, &src, nullptr);
-	glCompileShader(id);
-
-	//error handling
-	int result;
-	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-	if (result == GL_FALSE)
-	{
-		int length;
-		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-		char* message = (char*)alloca(length * sizeof(char));
-		glGetShaderInfoLog(id, length, &length, message);
-		std::cout << "Failed to compile " << (shaderSource.type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader!" << std::endl;
-		std::cout << message << std::endl;
-		glDeleteShader(id);
-		return 0;
-	}
-
-	return id;
-};
-
-GLuint CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
-{
-	unsigned int program = glCreateProgram();
-	unsigned int vs = CompileShader(ParseShader(vertexShader));
-	unsigned int fs = CompileShader(ParseShader(fragmentShader));
-
-	glAttachShader(program, vs);
-	glAttachShader(program, fs);
-
-	glLinkProgram(program);
-	glValidateProgram(program);
-
-	glDeleteShader(vs);
-	glDeleteShader(fs);
-
-	return program;
-}
-
-struct Vertex
-{
-	glm::vec2 Position;
-	glm::vec2 TexCoord;
-};
-
-struct VP
-{
-	glm::mat4 projectionInital = glm::ortho(0.0f, 800.0f, 0.0f, 800.0f, -1.0f, 1.0f);
-	glm::mat4 viewInital = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
-
-	glm::mat4 projection = projectionInital;
-	glm::mat4 view = viewInital;
-};
-
-
-VP vp;
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (key == GLFW_KEY_W && action == GLFW_REPEAT)
-	{
-		vp.view = glm::translate(vp.view, glm::vec3(0, -10, 0));
-	}
-
-	if (key == GLFW_KEY_S && action == GLFW_REPEAT)
-	{
-		vp.view = glm::translate(vp.view, glm::vec3(0, 10, 0));
-	}
-
-	if (key == GLFW_KEY_A && action == GLFW_REPEAT)
-	{
-		vp.view = glm::translate(vp.view, glm::vec3(10, 0, 0));
-	}
-
-	if (key == GLFW_KEY_D && action == GLFW_REPEAT)
-	{
-		vp.view = glm::translate(vp.view, glm::vec3(-10, 0, 0));
-	}
-
-	if (key == GLFW_KEY_Q && action == GLFW_REPEAT)
-	{
-		vp.view = glm::translate(vp.view, glm::vec3(400,400,0));
-		vp.view = glm::scale(vp.view, glm::vec3(0.8,0.8,1.0f));
-		vp.view = glm::translate(vp.view, glm::vec3(-400, -400, 0));
-	}
-
-	if (key == GLFW_KEY_E && action == GLFW_REPEAT)
-	{
-		vp.view = glm::translate(vp.view, glm::vec3(400, 400, 0));
-		vp.view = glm::scale(vp.view, glm::vec3(1.2, 1.2, 1.0f));
-		vp.view = glm::translate(vp.view, glm::vec3(-400, -400, 0));
-	}
-
-	if (key == GLFW_KEY_R && action == GLFW_PRESS)
-	{
-		vp.view = vp.viewInital;
-		vp.projection = vp.projectionInital;
-	}
-}
+//constexpr int GameSize = 400;
+//constexpr int WindowSize = 800;
+//
+//struct ShaderSource
+//{
+//	uint32_t type;
+//	std::string source;
+//};
+//
+//ShaderSource ParseShader(const std::string& filepath)
+//{
+//	std::ifstream stream(filepath);
+//
+//	std::string line;
+//	std::stringstream ss;
+//	uint32_t type = GL_INVALID_ENUM;
+//
+//	while (std::getline(stream, line))
+//	{
+//		if (line.find("#shader") != std::string::npos)
+//		{
+//			if (line.find("vertex") != std::string::npos)
+//				type = GL_VERTEX_SHADER;
+//			else if (line.find("fragment") != std::string::npos)
+//				type = GL_FRAGMENT_SHADER;
+//		}
+//		else
+//		{
+//			ss << line << '\n';
+//		}
+//	}
+//
+//	return { type, ss.str() };
+//};
+//
+//GLuint CompileShader(const ShaderSource& shaderSource)
+//{
+//	unsigned int id = glCreateShader(shaderSource.type);
+//	const char* src = shaderSource.source.c_str();
+//	glShaderSource(id, 1, &src, nullptr);
+//	glCompileShader(id);
+//
+//	//error handling
+//	int result;
+//	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
+//	if (result == GL_FALSE)
+//	{
+//		int length;
+//		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+//		char* message = (char*)alloca(length * sizeof(char));
+//		glGetShaderInfoLog(id, length, &length, message);
+//		std::cout << "Failed to compile " << (shaderSource.type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader!" << std::endl;
+//		std::cout << message << std::endl;
+//		glDeleteShader(id);
+//		return 0;
+//	}
+//
+//	return id;
+//};
+//
+//GLuint CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
+//{
+//	unsigned int program = glCreateProgram();
+//	unsigned int vs = CompileShader(ParseShader(vertexShader));
+//	unsigned int fs = CompileShader(ParseShader(fragmentShader));
+//
+//	glAttachShader(program, vs);
+//	glAttachShader(program, fs);
+//
+//	glLinkProgram(program);
+//	glValidateProgram(program);
+//
+//	glDeleteShader(vs);
+//	glDeleteShader(fs);
+//
+//	return program;
+//}
+//
+//struct Vertex
+//{
+//	glm::vec2 Position;
+//	glm::vec2 TexCoord;
+//};
+//
+//struct VP
+//{
+//	glm::mat4 projectionInital = glm::ortho(0.0f, 800.0f, 0.0f, 800.0f, -1.0f, 1.0f);
+//	glm::mat4 viewInital = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+//
+//	glm::mat4 projection = projectionInital;
+//	glm::mat4 view = viewInital;
+//};
+//
+//
+//VP vp;
+//
+//void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+//{
+//	if (key == GLFW_KEY_W && action == GLFW_REPEAT)
+//	{
+//		vp.view = glm::translate(vp.view, glm::vec3(0, -10, 0));
+//	}
+//
+//	if (key == GLFW_KEY_S && action == GLFW_REPEAT)
+//	{
+//		vp.view = glm::translate(vp.view, glm::vec3(0, 10, 0));
+//	}
+//
+//	if (key == GLFW_KEY_A && action == GLFW_REPEAT)
+//	{
+//		vp.view = glm::translate(vp.view, glm::vec3(10, 0, 0));
+//	}
+//
+//	if (key == GLFW_KEY_D && action == GLFW_REPEAT)
+//	{
+//		vp.view = glm::translate(vp.view, glm::vec3(-10, 0, 0));
+//	}
+//
+//	if (key == GLFW_KEY_Q && action == GLFW_REPEAT)
+//	{
+//		vp.view = glm::translate(vp.view, glm::vec3(400,400,0));
+//		vp.view = glm::scale(vp.view, glm::vec3(0.8,0.8,1.0f));
+//		vp.view = glm::translate(vp.view, glm::vec3(-400, -400, 0));
+//	}
+//
+//	if (key == GLFW_KEY_E && action == GLFW_REPEAT)
+//	{
+//		vp.view = glm::translate(vp.view, glm::vec3(400, 400, 0));
+//		vp.view = glm::scale(vp.view, glm::vec3(1.2, 1.2, 1.0f));
+//		vp.view = glm::translate(vp.view, glm::vec3(-400, -400, 0));
+//	}
+//
+//	if (key == GLFW_KEY_R && action == GLFW_PRESS)
+//	{
+//		vp.view = vp.viewInital;
+//		vp.projection = vp.projectionInital;
+//	}
+//}
 
 
 int main()
@@ -416,7 +416,7 @@ int main()
 	//glfwTerminate();
 	//return 0;
 
-	std::unique_ptr<GameOfLife> app = std::make_unique<GameOfLife>();
+	std::unique_ptr<GameOfLife> app = std::make_unique<GameOfLife>("Game Of Life", 800, 800);
 	app->Run();
 
 	return 0;

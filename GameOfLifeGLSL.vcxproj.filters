@@ -22,6 +22,9 @@
     <Filter Include="Source Files\GoL">
       <UniqueIdentifier>{aedd7222-dad6-419b-91dc-551894fe9c51}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Events">
+      <UniqueIdentifier>{fa761c94-ae93-44f8-82f2-9b364c738884}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -75,6 +78,18 @@
     </ClInclude>
     <ClInclude Include="GameOfLife.h">
       <Filter>Source Files\GoL</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Source Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyEvent.h">
+      <Filter>Source Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseEvent.h">
+      <Filter>Source Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowEvent.h">
+      <Filter>Source Files\Events</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

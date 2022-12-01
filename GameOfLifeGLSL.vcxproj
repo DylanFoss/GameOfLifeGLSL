@@ -161,8 +161,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="GameOfLife.h" />
     <ClInclude Include="GLErrorHandler.h" />
+    <ClInclude Include="WindowEvent.h" />
+    <ClInclude Include="MouseEvent.h" />
+    <ClInclude Include="KeyEvent.h" />
     <ClInclude Include="TimeStep.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
