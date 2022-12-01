@@ -168,7 +168,6 @@ void GameOfLife::Init()
 	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) , indices, GL_STATIC_DRAW));
 
 	glBindBuffer(GL_ARRAY_BUFFER,VB);
-
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*4, vertices, GL_STATIC_DRAW);
 
 	GLCall(glEnableVertexAttribArray(VA));
@@ -305,8 +304,7 @@ void GameOfLife::Update(float deltaTime)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	counter += deltaTime*1000;
-
+	counter += deltaTime;
 
 	if (counter > 0.05f)
 	{
