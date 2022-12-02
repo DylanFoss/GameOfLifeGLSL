@@ -166,7 +166,8 @@
     <ClInclude Include="GameOfLife.h" />
     <ClInclude Include="GLErrorHandler.h" />
     <ClInclude Include="GL.h" />
-    <ClInclude Include="GlUtils.h" />
+    <ClInclude Include="GLUtils.h" />
+    <ClInclude Include="pch.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="WindowEvent.h" />
     <ClInclude Include="MouseEvent.h" />

@@ -106,7 +106,10 @@
     <ClInclude Include="GL.h">
       <Filter>Source Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="GlUtils.h">
+    <ClInclude Include="GLUtils.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
       <Filter>Source Files\Engine</Filter>
     </ClInclude>
   </ItemGroup>

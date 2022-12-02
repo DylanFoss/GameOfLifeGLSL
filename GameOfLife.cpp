@@ -1,7 +1,6 @@
 #include "GameOfLife.h"
-
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
+#include "pch.h"
+#include <fstream>
 
 #include "GLErrorHandler.h"
 
@@ -51,7 +50,7 @@ unsigned int VA, VB, VA2, VB2, IB;
 
 GLuint noiseBuffer, fb;
 
-GLuint shader, GoL, noise;
+Utils::Shader shader, GoL, noise;
 
 GLuint renderTarget;
 
@@ -167,24 +166,24 @@ void GameOfLife::Init()
 	//model = glm::scale(model, glm::vec3(1.0f, 1.0f, 0));
 
 	glm::mat4 mvp = vp.projection * vp.view * model;
-	shader = CreateShader("basic.vert.shader", "basic.frag.shader");
+	shader.CreateShader("basic.vert.shader", "basic.frag.shader");
 
-	GLCall(glUseProgram(shader));
+	shader.Bind();
 	int sampler[3] = {0,1,2};
-	auto loc = glGetUniformLocation(shader, "u_Textures");
+	auto loc = glGetUniformLocation(shader.ID(), "u_Textures");
 	GLCall(glUniform1iv(loc, 3, sampler));
-	GLCall(glUniform1f(glGetUniformLocation(shader, "u_TexIndex"), 0));
-	GLCall(glUniformMatrix4fv(glGetUniformLocation(shader, "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
+	GLCall(glUniform1f(glGetUniformLocation(shader.ID(), "u_TexIndex"), 0));
+	GLCall(glUniformMatrix4fv(glGetUniformLocation(shader.ID(), "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
 
-	GoL = CreateShader("GoL.vert.shader", "GoL.frag.shader");
-	GLCall(glUseProgram(GoL));
-	GLCall(glUniform1i(glGetUniformLocation(GoL, "u_State"), 1));
-	GLCall(glUniform2f(glGetUniformLocation(GoL, "u_Scale"), GameSize, GameSize));
+	GoL.CreateShader("GoL.vert.shader", "GoL.frag.shader");
+	GLCall(GoL.Bind());
+	GLCall(glUniform1i(glGetUniformLocation(GoL.ID(), "u_State"), 1));
+	GLCall(glUniform2f(glGetUniformLocation(GoL.ID(), "u_Scale"), GameSize, GameSize));
 
 	//inital noise
 
-	noise = CreateShader("noise.vert.shader", "noise.frag.shader");
-	GLCall(glUseProgram(noise));
+	noise.CreateShader("noise.vert.shader", "noise.frag.shader");
+	noise.Bind();
 
 	//GLuint noiseBuffer;
 	glGenFramebuffers(1, &noiseBuffer);
@@ -195,7 +194,7 @@ void GameOfLife::Init()
 	glPushAttrib(GL_VIEWPORT_BIT);
 	glViewport(0, 0, GameSize, GameSize);
 
-	GLCall(glUseProgram(noise));
+	GLCall(glUseProgram(noise.ID()));
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 	glPopAttrib();
@@ -208,8 +207,8 @@ void GameOfLife::Init()
 	glPushAttrib(GL_VIEWPORT_BIT);
 	//glViewport(0, 0, WindowSize, WindowSize);
 
-	GLCall(glUseProgram(shader));
-	GLCall(glUniform1f(glGetUniformLocation(shader, "u_TexIndex"), 1));
+	shader.Bind();
+	GLCall(glUniform1f(glGetUniformLocation(shader.ID(), "u_TexIndex"), 1));
 	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
 	glPopAttrib();
@@ -233,8 +232,8 @@ void GameOfLife::Update(float deltaTime)
 		glPushAttrib(GL_VIEWPORT_BIT);
 		glViewport(0, 0, GameSize, GameSize);
 
-		GLCall(glUseProgram(GoL));
-		GLCall(glUniform1i(glGetUniformLocation(GoL, "u_State"), backTexture));
+		GoL.Bind();
+		GLCall(glUniform1i(glGetUniformLocation(GoL.ID(), "u_State"), backTexture));
 
 		glBindBuffer(GL_ARRAY_BUFFER, VB2);
 		glBindVertexArray(VA2);
@@ -254,11 +253,11 @@ void GameOfLife::Update(float deltaTime)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, WindowSize, WindowSize);
-	GLCall(glUseProgram(shader));
-	GLCall(glUniform1f(glGetUniformLocation(shader, "u_TexIndex"), backTexture));
+	shader.Bind();
+	GLCall(glUniform1f(glGetUniformLocation(shader.ID(), "u_TexIndex"), backTexture));
 
 	glm::mat4 mvp = vp.projection * vp.view * model;
-	GLCall(glUniformMatrix4fv(glGetUniformLocation(shader, "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
+	GLCall(glUniformMatrix4fv(glGetUniformLocation(shader.ID(), "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
 	glBindBuffer(GL_ARRAY_BUFFER, VB);
 	glBindVertexArray(VA);
 	//glBindBuffer(GL_ARRAY_BUFFER, VB);
