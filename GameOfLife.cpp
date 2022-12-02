@@ -1,7 +1,4 @@
 #include "GameOfLife.h"
-#include <iostream>
-#include <sstream>
-#include <fstream>
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -17,81 +14,6 @@ GameOfLife::GameOfLife(const std::string& name, uint32_t width, uint32_t height)
 constexpr int GameSize = 400;
 constexpr int WindowSize = 800;
 
-struct ShaderSource
-{
-	uint32_t type;
-	std::string source;
-};
-
-ShaderSource ParseShader(const std::string& filepath)
-{
-	std::ifstream stream(filepath);
-
-	std::string line;
-	std::stringstream ss;
-	uint32_t type = GL_INVALID_ENUM;
-
-	while (std::getline(stream, line))
-	{
-		if (line.find("#shader") != std::string::npos)
-		{
-			if (line.find("vertex") != std::string::npos)
-				type = GL_VERTEX_SHADER;
-			else if (line.find("fragment") != std::string::npos)
-				type = GL_FRAGMENT_SHADER;
-		}
-		else
-		{
-			ss << line << '\n';
-		}
-	}
-
-	return { type, ss.str() };
-};
-
-GLuint CompileShader(const ShaderSource& shaderSource)
-{
-	unsigned int id = glCreateShader(shaderSource.type);
-	const char* src = shaderSource.source.c_str();
-	glShaderSource(id, 1, &src, nullptr);
-	glCompileShader(id);
-
-	//error handling
-	int result;
-	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-	if (result == GL_FALSE)
-	{
-		int length;
-		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-		char* message = (char*)alloca(length * sizeof(char));
-		glGetShaderInfoLog(id, length, &length, message);
-		std::cout << "Failed to compile " << (shaderSource.type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader!" << std::endl;
-		std::cout << message << std::endl;
-		glDeleteShader(id);
-		return 0;
-	}
-
-	return id;
-};
-
-GLuint CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
-{
-	unsigned int program = glCreateProgram();
-	unsigned int vs = CompileShader(ParseShader(vertexShader));
-	unsigned int fs = CompileShader(ParseShader(fragmentShader));
-
-	glAttachShader(program, vs);
-	glAttachShader(program, fs);
-
-	glLinkProgram(program);
-	glValidateProgram(program);
-
-	glDeleteShader(vs);
-	glDeleteShader(fs);
-
-	return program;
-}
-
 struct Vertex
 {
 	glm::vec2 Position;
@@ -106,7 +28,6 @@ struct VP
 	glm::mat4 projection = projectionInital;
 	glm::mat4 view = viewInital;
 };
-
 
 VP vp;
 
@@ -130,13 +51,13 @@ unsigned int VA, VB, VA2, VB2, IB;
 
 GLuint noiseBuffer, fb;
 
-GLuint shader, GoL;
+GLuint shader, GoL, noise;
 
 GLuint renderTarget;
 
 GLuint frontTex, backTex;
 
-glm::mat4 model = glm::mat4(1.0f);
+glm::mat4 model;
 
 void GameOfLife::Init()
 {
@@ -154,7 +75,7 @@ void GameOfLife::Init()
 
 	//openGL
 
-	unsigned int VA;
+	//unsigned int VA;
 	glGenVertexArrays(1, &VA);
 	glBindVertexArray(VA);
 
@@ -242,7 +163,7 @@ void GameOfLife::Init()
 	//GLCall(glBindTexture(GL_TEXTURE_2D, frontTex));
 	//GLCall(glBindTexture(GL_TEXTURE_2D, backTex));
 
-	//glm::mat4 model = glm::mat4(1.0f);
+	model = glm::mat4(1.0f);
 	//model = glm::scale(model, glm::vec3(1.0f, 1.0f, 0));
 
 	glm::mat4 mvp = vp.projection * vp.view * model;
@@ -262,7 +183,7 @@ void GameOfLife::Init()
 
 	//inital noise
 
-	GLuint noise = CreateShader("noise.vert.shader", "noise.frag.shader");
+	noise = CreateShader("noise.vert.shader", "noise.frag.shader");
 	GLCall(glUseProgram(noise));
 
 	//GLuint noiseBuffer;
@@ -280,7 +201,6 @@ void GameOfLife::Init()
 	glPopAttrib();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	//Time keeping
 
 	//show inital noise
 
@@ -290,7 +210,7 @@ void GameOfLife::Init()
 
 	GLCall(glUseProgram(shader));
 	GLCall(glUniform1f(glGetUniformLocation(shader, "u_TexIndex"), 1));
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
 	glPopAttrib();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -298,8 +218,8 @@ void GameOfLife::Init()
 
 float counter = 0.0f;
 
-int frontTexture = 1;
-int backTexture = 2;
+int backTexture = 1;
+int frontTexture = 2;
 void GameOfLife::Update(float deltaTime)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -308,7 +228,6 @@ void GameOfLife::Update(float deltaTime)
 
 	if (counter > 0.05f)
 	{
-
 		glBindFramebuffer(GL_FRAMEBUFFER, noiseBuffer);
 
 		glPushAttrib(GL_VIEWPORT_BIT);
@@ -330,7 +249,7 @@ void GameOfLife::Update(float deltaTime)
 
 		std::swap(backTexture, frontTexture);
 
-		counter = 0.0f;
+		counter = 0;
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -342,8 +261,7 @@ void GameOfLife::Update(float deltaTime)
 	GLCall(glUniformMatrix4fv(glGetUniformLocation(shader, "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
 	glBindBuffer(GL_ARRAY_BUFFER, VB);
 	glBindVertexArray(VA);
-	glBindBuffer(GL_ARRAY_BUFFER, VB);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+	//glBindBuffer(GL_ARRAY_BUFFER, VB);
 	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 }
 

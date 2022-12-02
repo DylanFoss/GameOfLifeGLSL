@@ -15,18 +15,19 @@ Application::Application(const std::string& name, uint32_t width, uint32_t heigh
 
 int Application::Run()
 {
+	std::chrono::time_point <std::chrono::high_resolution_clock> t1, t2;
+	t1 = std::chrono::high_resolution_clock::now();
 	while (m_Running)
 	{
+		t2 = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> elapsedTime = t2 - t1;
+		float deltaTime = elapsedTime.count();
 
-		auto start = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch());
-		float time = (float)start.count();
-		TimeStep timestep = time - m_LastFrameTime;
-		m_LastFrameTime = time;
-
-		Update(time);
-		Draw(time);
+		Update(deltaTime);
+		Draw(deltaTime);
 
 		m_Window->OnUpdate();
+		t1 = t2;
 	}
 
 	return 0;

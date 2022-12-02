@@ -18,5 +18,5 @@ float random(vec2 st) {
 void main() {
     vec2 ipos = floor(gl_FragCoord.xy);  // get the integer coords
     vec4 color = vec4(vec3(random(ipos)), 1.0f);
-    o_Color = color; //> 0.9 ? vec4(vec3(1.0),1.0) : vec4(vec3(0.0),1.0);
+    o_Color = color; //.r > 0.9 ? vec4(vec3(1.0),1.0) : vec4(vec3(0.0),1.0);
 }
