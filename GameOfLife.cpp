@@ -70,18 +70,12 @@ void GameOfLife::Init()
 
 	glClearColor(0.0f, 0.0f, 0.20f, 1.0f);
 
-	//glOrtho(0, WindowSize, 0, WindowSize, -1, 1);
-
 	//openGL
 
-	//unsigned int VA;
 	glGenVertexArrays(1, &VA);
 	glBindVertexArray(VA);
 
-	//unsigned int VB;
 	glGenBuffers(1, &VB);
-
-	//unsigned int IB;
 
 	GLCall(glCreateBuffers(1, &IB));
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB));
@@ -98,14 +92,12 @@ void GameOfLife::Init()
 	GLCall(glEnableVertexArrayAttrib(VA, 1));
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord));
 
-	//unsigned int VA2;
 	glGenVertexArrays(1, &VA2);
 	glBindVertexArray(VA2);
 
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB));
 	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
 
-	//unsigned int VB2;
 	glGenBuffers(1, &VB2);
 	glBindBuffer(GL_ARRAY_BUFFER, VB2);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4, vertices2, GL_STATIC_DRAW);
@@ -118,17 +110,8 @@ void GameOfLife::Init()
 	GLCall(glEnableVertexArrayAttrib(VA2, 1));
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoord));
 
-	//glBindBuffer(GL_ARRAY_BUFFER, VB);
-
-
-	//GLuint fb;
 	glGenFramebuffers(1, &fb);
 	glBindFramebuffer(GL_FRAMEBUFFER, fb);
-
-	//GLuint renderTarget;
-
-	//GLuint frontTex;
-	//GLuint backTex;
 
 	glActiveTexture(GL_TEXTURE0);
 	GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &renderTarget));
@@ -159,11 +142,7 @@ void GameOfLife::Init()
 
 	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTarget, 0);
 
-	//GLCall(glBindTexture(GL_TEXTURE_2D, frontTex));
-	//GLCall(glBindTexture(GL_TEXTURE_2D, backTex));
-
 	model = glm::mat4(1.0f);
-	//model = glm::scale(model, glm::vec3(1.0f, 1.0f, 0));
 
 	glm::mat4 mvp = vp.projection * vp.view * model;
 	shader.CreateShader("basic.vert.shader", "basic.frag.shader");
@@ -185,7 +164,6 @@ void GameOfLife::Init()
 	noise.CreateShader("noise.vert.shader", "noise.frag.shader");
 	noise.Bind();
 
-	//GLuint noiseBuffer;
 	glGenFramebuffers(1, &noiseBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, noiseBuffer);
 
@@ -205,7 +183,7 @@ void GameOfLife::Init()
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fb);
 	glPushAttrib(GL_VIEWPORT_BIT);
-	//glViewport(0, 0, WindowSize, WindowSize);
+
 
 	shader.Bind();
 	GLCall(glUniform1f(glGetUniformLocation(shader.ID(), "u_TexIndex"), 1));
@@ -219,12 +197,16 @@ float counter = 0.0f;
 
 int backTexture = 1;
 int frontTexture = 2;
+
+/*
+* This section updates the texture by drawing the state texture (initally noise) to a gamespace quad using the GoL shader, which updates the state accordingly.
+* This is performed on buffer object so the texture can be bound to the other texture of the same size.
+* Each time this operation is perforemd to the other texture, allowing for timed state updates.
+*/
 void GameOfLife::Update(float deltaTime)
 {
-	glClear(GL_COLOR_BUFFER_BIT);
 
 	counter += deltaTime;
-
 	if (counter > 0.05f)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, noiseBuffer);
@@ -240,7 +222,7 @@ void GameOfLife::Update(float deltaTime)
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
-		glActiveTexture(GL_TEXTURE0+frontTexture);
+		glActiveTexture(GL_TEXTURE0 + frontTexture);
 		glBindTexture(GL_TEXTURE_2D, noiseBuffer);
 
 		glPopAttrib();
@@ -250,6 +232,16 @@ void GameOfLife::Update(float deltaTime)
 
 		counter = 0;
 	}
+
+}
+
+/*
+* This section simpy draws the most recent state texture to a screenspace quad
+*/
+void GameOfLife::Draw(float deltaTime)
+{
+
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, WindowSize, WindowSize);
@@ -262,9 +254,4 @@ void GameOfLife::Update(float deltaTime)
 	glBindVertexArray(VA);
 	//glBindBuffer(GL_ARRAY_BUFFER, VB);
 	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-}
-
-void GameOfLife::Draw(float deltaTime)
-{
-	//std::cout << "Drawn!" << '\n';
 }
