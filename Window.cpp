@@ -62,17 +62,6 @@ void Window::Init(const WindowProps& data)
         WindowResizeEvent event(width, height);
         data.EventCallback(event);
     });
-    
-    glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
-    {
-        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
-        data.Width = width;
-        data.Height = height;
-
-        WindowResizeEvent event(width, height);
-        data.EventCallback(event);
-    });
 
 }
 
