@@ -22,7 +22,7 @@ int Application::Run()
 	{
 		t2 = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> elapsedTime = t2 - t1;
-		float deltaTime = elapsedTime.count();
+		float deltaTime = (float)elapsedTime.count();
 
 		Update(deltaTime);
 		Draw(deltaTime);
