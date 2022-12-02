@@ -1,9 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
-
 #include "Window.h"
-#include "Timestep.h"
 
 #include "Event.h"
 #include "WindowEvent.h"
