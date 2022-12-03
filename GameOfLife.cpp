@@ -10,8 +10,8 @@ GameOfLife::GameOfLife(const std::string& name, uint32_t width, uint32_t height)
 	Init();
 }
 
-constexpr int GameSize = 400;
 constexpr int WindowSize = 800;
+constexpr int GameSize = 200;
 
 struct Vertex
 {
@@ -31,17 +31,17 @@ struct VP
 VP vp;
 
 Vertex vertices2[4] = {
-		{{-1.0f, -1.0f},	{0.0f, 0.0f}},
-		{{ 1.0f, -1.0f},	{1.0f, 0.0f}},
-		{{ 1.0f,  1.0f},	{1.0f, 1.0f}},
-		{{-1.0f,  1.0f},	{0.0f, 1.0f}}
+	{{-1.0f, -1.0f},	{0.0f, 0.0f}},
+	{{ 1.0f, -1.0f},	{1.0f, 0.0f}},
+	{{ 1.0f,  1.0f},	{1.0f, 1.0f}},
+	{{-1.0f,  1.0f},	{0.0f, 1.0f}}
 };
 
 Vertex vertices[4] = {
-	{{0, 0},		{0.0f, 0.0f}},
-	{{800, 0},		{1.0f, 0.0f}},
-	{{800,  800},	{1.0f, 1.0f}},
-	{{0,  800},		{0.0f, 1.0f}}
+	{{0,     0}, {0.0f, 0.0f}},
+	{{800,   0}, {1.0f, 0.0f}},
+	{{800, 800}, {1.0f, 1.0f}},
+	{{0,   800}, {0.0f, 1.0f}}
 };
 
 unsigned int indices[6] = { 0, 1, 2, 2, 3, 0 };
@@ -120,7 +120,7 @@ void GameOfLife::Init()
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WindowSize, WindowSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr));
+	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Window->GetWidth(), m_Window->GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr));
 
 	glActiveTexture(GL_TEXTURE0+1);
 	GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &frontTex));
@@ -160,7 +160,6 @@ void GameOfLife::Init()
 	GLCall(glUniform2f(glGetUniformLocation(GoL.ID(), "u_Scale"), GameSize, GameSize));
 
 	//inital noise
-
 	noise.CreateShader("noise.vert.shader", "noise.frag.shader");
 	noise.Bind();
 
@@ -178,9 +177,7 @@ void GameOfLife::Init()
 	glPopAttrib();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-
 	//show inital noise
-
 	glBindFramebuffer(GL_FRAMEBUFFER, fb);
 	glPushAttrib(GL_VIEWPORT_BIT);
 
@@ -205,7 +202,6 @@ int frontTexture = 2;
 */
 void GameOfLife::Update(float deltaTime)
 {
-
 	counter += deltaTime;
 	if (counter > 0.05f)
 	{
@@ -244,7 +240,7 @@ void GameOfLife::Draw(float deltaTime)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, WindowSize, WindowSize);
+	glViewport(0, 0, m_Window->GetWidth(), m_Window->GetHeight());
 	shader.Bind();
 	GLCall(glUniform1f(glGetUniformLocation(shader.ID(), "u_TexIndex"), backTexture));
 

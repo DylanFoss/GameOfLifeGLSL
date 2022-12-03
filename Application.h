@@ -19,9 +19,10 @@ public:
 	virtual void Update(float deltaTime) = 0;
 	virtual void Draw(float deltaTime) = 0;
 
+protected:
+	std::unique_ptr<Window> m_Window;
 private:
 
-	std::unique_ptr<Window> m_Window;
 	bool m_Running = true;
 	float m_LastFrameTime = 0.0f;
 
