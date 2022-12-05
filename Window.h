@@ -46,6 +46,8 @@ public:
 
 	static Window* Create(const WindowProps& data = WindowProps());
 
+	inline void* GetNativeWindow() { return m_Window; }
+
 private:
 	void Init(const WindowProps& data);
 	void Shutdown();

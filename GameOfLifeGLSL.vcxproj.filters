@@ -51,6 +51,9 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\Engine\Util</Filter>
     </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="basic.frag.shader">
@@ -111,6 +114,15 @@
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyCodes.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseCodes.h">
+      <Filter>Source Files\Engine\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

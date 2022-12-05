@@ -1,6 +1,10 @@
 #include "Window.h"
 #include "WindowEvent.h"
 
+#include "Input.h"
+
+#include <iostream>
+
 Window::Window(const WindowProps& data)
 {
     Init(data);
@@ -63,6 +67,46 @@ void Window::Init(const WindowProps& data)
         data.EventCallback(event);
     });
 
+    glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+    {
+        //hack, we are only care about ascii codes atm
+        if (key > 255)
+            return;
+
+        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+        switch (action)
+        {
+            case GLFW_PRESS:
+            {
+                Input::Get().KeysDown(key);
+                break;
+            }
+            case GLFW_RELEASE:
+            {
+                Input::Get().KeysUp(key);
+                break;
+            }
+        }
+    });
+
+    glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
+    {
+        switch (action)
+        {
+        case(GLFW_RELEASE):
+            Input::Get().MouseButtonsUp(button);
+            break;
+        case(GLFW_PRESS):
+            Input::Get().MouseButtonsDown(button);
+            break;
+        }
+    });
+
+    glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xpos, double ypos)
+    {
+         Input::Get().MousePosition(xpos, ypos);
+    });
 }
 
 void Window::OnUpdate()

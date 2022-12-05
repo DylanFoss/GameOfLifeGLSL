@@ -2,9 +2,11 @@
 #include <string>
 #include <memory>
 #include "Window.h"
+#include "Input.h"
 
 #include "Event.h"
 #include "WindowEvent.h"
+#include "KeyEvent.h"
 
 class Application
 {
@@ -19,8 +21,13 @@ public:
 	virtual void Update(float deltaTime) = 0;
 	virtual void Draw(float deltaTime) = 0;
 
+	inline static Application& Get() { return *s_Instance; }
+	inline Window& GetWindow() { return *m_Window; }
+
 protected:
 	std::unique_ptr<Window> m_Window;
+
+	std::unique_ptr<Input> m_Input;
 private:
 
 	bool m_Running = true;

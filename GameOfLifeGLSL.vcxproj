@@ -148,6 +148,7 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="GameOfLife.cpp" />
     <ClCompile Include="GLErrorHandler.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -167,6 +168,9 @@
     <ClInclude Include="GLErrorHandler.h" />
     <ClInclude Include="GL.h" />
     <ClInclude Include="GLUtils.h" />
+    <ClInclude Include="MouseCodes.h" />
+    <ClInclude Include="KeyCodes.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="WindowEvent.h" />

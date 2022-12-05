@@ -10,6 +10,8 @@ Application::Application(const std::string& name, uint32_t width, uint32_t heigh
 	if (!s_Instance)
 		s_Instance = this;
 
+	m_Input = std::unique_ptr<Input>(new Input());
+
 	m_Window = std::unique_ptr<Window>(Window::Create({ name, width, height }));
 	m_Window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 }
@@ -26,6 +28,9 @@ int Application::Run()
 
 		Update(deltaTime);
 		Draw(deltaTime);
+
+		m_Input->KeysHeld();
+		m_Input->MouseButtonsHeld();
 
 		m_Window->OnUpdate();
 		t1 = t2;
