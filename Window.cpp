@@ -107,6 +107,11 @@ void Window::Init(const WindowProps& data)
     {
          Input::Get().MousePosition(xpos, ypos);
     });
+
+    glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xoffset, double yoffset)
+    {
+        Input::Get().MouseScroll(yoffset);
+    });
 }
 
 void Window::OnUpdate()

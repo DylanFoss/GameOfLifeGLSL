@@ -26,8 +26,8 @@ public:
 
 protected:
 	std::unique_ptr<Window> m_Window;
-
 	std::unique_ptr<Input> m_Input;
+
 private:
 
 	bool m_Running = true;

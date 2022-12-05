@@ -16,6 +16,13 @@ Input::Input()
 	std::memset(m_MouseStatesOld, 0, sizeof(bool) * s_numMouseKeys);
 }
 
+void Input::InputReset()
+{
+	KeysHeld();
+	MouseButtonsHeld();
+	MouseScrollHeld();
+}
+
 bool Input::IsKeyPressed(int key) const
 {
 	return m_KeyStates[key] && !m_KeyStatesOld[key];
@@ -84,3 +91,12 @@ void Input::MousePosition(int x, int y)
 	m_MousePosY = y;
 }
 
+void Input::MouseScroll(int axis)
+{
+	m_MouseScrollAxis = axis;
+}
+
+void Input::MouseScrollHeld()
+{
+	m_MouseScrollAxis = 0;
+}

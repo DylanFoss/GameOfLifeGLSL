@@ -29,8 +29,7 @@ int Application::Run()
 		Update(deltaTime);
 		Draw(deltaTime);
 
-		m_Input->KeysHeld();
-		m_Input->MouseButtonsHeld();
+		m_Input->InputReset();
 
 		m_Window->OnUpdate();
 		t1 = t2;

@@ -209,6 +209,11 @@ void GameOfLife::Update(float deltaTime)
 		std::cout << "Mouse " << KC_MOUSE_BUTTON_LEFT << " at: " << m_Input->GetMousePos().first << ", " << m_Input->GetMousePos().second << '\n';
 	}
 
+	if (m_Input->GetMouseScroll() != 0)
+	{
+		std::cout << "Mouse Axis " << m_Input->GetMouseScroll() << " at: " << m_Input->GetMousePos().first << ", " << m_Input->GetMousePos().second << '\n';
+	}
+
 	counter += deltaTime;
 	if (counter > 0.05f)
 	{
