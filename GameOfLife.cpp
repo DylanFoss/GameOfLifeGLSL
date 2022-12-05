@@ -2,6 +2,8 @@
 #include "pch.h"
 #include <fstream>
 
+#include "MouseCodes.h"
+
 #include "GLErrorHandler.h"
 
 GameOfLife::GameOfLife(const std::string& name, uint32_t width, uint32_t height)
@@ -202,6 +204,11 @@ int frontTexture = 2;
 */
 void GameOfLife::Update(float deltaTime)
 {
+	if (m_Input->IsMousePressed(KC_MOUSE_BUTTON_LEFT))
+	{
+		std::cout << "Mouse " << KC_MOUSE_BUTTON_LEFT << " at: " << m_Input->GetMousePos().first << ", " << m_Input->GetMousePos().second << '\n';
+	}
+
 	counter += deltaTime;
 	if (counter > 0.05f)
 	{

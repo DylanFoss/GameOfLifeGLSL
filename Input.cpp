@@ -36,20 +36,20 @@ bool Input::IsMouseHeld(int button) const
 	return m_MouseStates[button] && m_MouseStatesOld[button];
 }
 
-std::pair<int, int> Input::GetMousePos(int button) const
+std::pair<int, int> Input::GetMousePos() const
 {
-	return std::pair<int, int>();
+	return std::pair<int, int>(m_MousePosX, m_MousePosY);
 }
 
 void Input::KeysDown(int key)
 {
-	std::cout << (char)key << " was pressed.\n";
+	//std::cout << (char)key << " was pressed.\n";
 	m_KeyStates[key] = true;
 }
 
 void Input::KeysUp(int key)
 {
-	std::cout << (char)key << " was released.\n";
+	//std::cout << (char)key << " was released.\n";
 	m_KeyStates[key] = false;
 }
 
@@ -61,25 +61,25 @@ void Input::KeysHeld()
 
 void Input::MouseButtonsDown(int button)
 {
-	std::cout << "Mouse " << button << " was pressed.\n";
+	//std::cout << "Mouse " << button << " was pressed.\n";
 	m_MouseStates[button] = true;
 }
 
 void Input::MouseButtonsUp(int button)
 {
-	std::cout << "Mouse " << button << " was released.\n";
+	//std::cout << "Mouse " << button << " was released.\n";
 	m_MouseStatesOld[button] = false;
 }
 
 void Input::MouseButtonsHeld()
 {
 	for (int i = 0; i < s_numMouseKeys; i++)
-		m_KeyStatesOld[i] = m_KeyStates[i];
+		m_MouseStatesOld[i] = m_MouseStates[i];
 }
 
 void Input::MousePosition(int x, int y)
 {
-	std::cout << "Mouse Pos: " << x << ' ' << y << '\n';
+	//std::cout << "Mouse Pos: " << x << ' ' << y << '\n';
 	m_MousePosX = x;
 	m_MousePosY = y;
 }

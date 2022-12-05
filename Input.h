@@ -21,7 +21,7 @@ public:
 	bool IsMousePressed(int button) const;
 	bool IsMouseHeld(int button) const;
 
-	std::pair<int, int> GetMousePos(int button) const;
+	std::pair<int, int> GetMousePos() const;
 
 	inline static Input& Get() { return *s_Instance; }
 
