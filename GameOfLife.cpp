@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include "MouseCodes.h"
+#include "KeyCodes.h"
 
 #include "GLErrorHandler.h"
 
@@ -212,6 +213,46 @@ void GameOfLife::Update(float deltaTime)
 	if (m_Input->GetMouseScroll() != 0)
 	{
 		std::cout << "Mouse Axis " << m_Input->GetMouseScroll() << " at: " << m_Input->GetMousePos().first << ", " << m_Input->GetMousePos().second << '\n';
+	}
+
+	if (m_Input->GetMouseScroll() < 0)
+	{
+		vp.view = glm::translate(vp.view, glm::vec3(400, 400, 0));
+		vp.view = glm::scale(vp.view, glm::vec3(0.8, 0.8, 1.0f));
+		vp.view = glm::translate(vp.view, glm::vec3(-400, -400, 0));
+	}
+
+	if (m_Input->GetMouseScroll() > 0)
+	{
+		vp.view = glm::translate(vp.view, glm::vec3(400, 400, 0));
+		vp.view = glm::scale(vp.view, glm::vec3(1.2, 1.2, 1.0f));
+		vp.view = glm::translate(vp.view, glm::vec3(-400, -400, 0));
+	}
+
+	if (m_Input->IsKeyHeld(KC_KEY_W))
+	{
+		vp.view = glm::translate(vp.view, glm::vec3(0, -1, 0));
+	}
+
+	if (m_Input->IsKeyHeld(KC_KEY_S))
+	{
+		vp.view = glm::translate(vp.view, glm::vec3(0, 1, 0));
+	}
+
+	if (m_Input->IsKeyHeld(KC_KEY_A))
+	{
+		vp.view = glm::translate(vp.view, glm::vec3(1, 0, 0));
+	}
+
+	if (m_Input->IsKeyHeld(KC_KEY_D))
+	{
+		vp.view = glm::translate(vp.view, glm::vec3(-1, 0, 0));
+	}
+
+	if (m_Input->IsKeyPressed(KC_KEY_R))
+	{
+		vp.view = vp.viewInital;
+		vp.projection = vp.projectionInital;
 	}
 
 	counter += deltaTime;
