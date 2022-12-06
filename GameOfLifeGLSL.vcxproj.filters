@@ -54,6 +54,12 @@
     <ClCompile Include="Input.cpp">
       <Filter>Source Files\Engine\Core</Filter>
     </ClCompile>
+    <ClCompile Include="OrthographicCamera.cpp">
+      <Filter>Source Files\Engine\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="OrthographicCameraController.cpp">
+      <Filter>Source Files\Engine\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="basic.frag.shader">
@@ -123,6 +129,12 @@
     </ClInclude>
     <ClInclude Include="MouseCodes.h">
       <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="OrthographicCamera.h">
+      <Filter>Source Files\Engine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="OrthographicCameraController.h">
+      <Filter>Source Files\Engine\Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

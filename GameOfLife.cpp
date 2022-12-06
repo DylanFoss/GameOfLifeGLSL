@@ -5,6 +5,8 @@
 #include "MouseCodes.h"
 #include "KeyCodes.h"
 
+#include "OrthographicCameraController.h";
+
 #include "GLErrorHandler.h"
 
 GameOfLife::GameOfLife(const std::string& name, uint32_t width, uint32_t height)
