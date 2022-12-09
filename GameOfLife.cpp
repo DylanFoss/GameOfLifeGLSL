@@ -16,7 +16,7 @@ GameOfLife::GameOfLife(const std::string& name, uint32_t width, uint32_t height)
 }
 
 constexpr int WindowSize = 800;
-constexpr int GameSize = 200;
+constexpr int GameSize = 800;
 
 struct Vertex
 {
@@ -26,14 +26,16 @@ struct Vertex
 
 struct VP
 {
-	glm::mat4 projectionInital = glm::ortho(0.0f, 800.0f, 0.0f, 800.0f, -1.0f, 1.0f);
+	glm::mat4 projectionInital = glm::ortho(-400.0f, 400.0f, -400.0f, 400.0f, -1.0f, 1.0f);
 	glm::mat4 viewInital = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
 
 	glm::mat4 projection = projectionInital;
-	glm::mat4 view = viewInital;
+	glm::mat4 view = viewInital; 
 };
 
 VP vp;
+
+Utils::OrthographicCameraController camera = Utils::OrthographicCameraController(400.0f);
 
 Vertex vertices2[4] = {
 	{{-1.0f, -1.0f},	{0.0f, 0.0f}},
@@ -43,10 +45,10 @@ Vertex vertices2[4] = {
 };
 
 Vertex vertices[4] = {
-	{{0,     0}, {0.0f, 0.0f}},
-	{{800,   0}, {1.0f, 0.0f}},
-	{{800, 800}, {1.0f, 1.0f}},
-	{{0,   800}, {0.0f, 1.0f}}
+	{{-400, -400}, {0.0f, 0.0f}},
+	{{400, -400}, {1.0f, 0.0f}},
+	{{400, 400}, {1.0f, 1.0f}},
+	{{-400,   400}, {0.0f, 1.0f}}
 };
 
 unsigned int indices[6] = { 0, 1, 2, 2, 3, 0 };
@@ -65,6 +67,8 @@ glm::mat4 model;
 
 void GameOfLife::Init()
 {
+	camera.GetCamera().SetProjection(-400, 400, -400, 400);
+
 	if (glewInit() != GLEW_OK)
 		std::cout << "ERROR!" << std::endl;
 
@@ -149,7 +153,7 @@ void GameOfLife::Init()
 
 	model = glm::mat4(1.0f);
 
-	glm::mat4 mvp = vp.projection * vp.view * model;
+	glm::mat4 mvp = camera.GetCamera().GetViewProjectionMatrix() * model;
 	shader.CreateShader("basic.vert.shader", "basic.frag.shader");
 
 	shader.Bind();
@@ -207,55 +211,58 @@ int frontTexture = 2;
 */
 void GameOfLife::Update(float deltaTime)
 {
-	if (m_Input->IsMousePressed(KC_MOUSE_BUTTON_LEFT))
-	{
-		std::cout << "Mouse " << KC_MOUSE_BUTTON_LEFT << " at: " << m_Input->GetMousePos().first << ", " << m_Input->GetMousePos().second << '\n';
-	}
 
-	if (m_Input->GetMouseScroll() != 0)
-	{
-		std::cout << "Mouse Axis " << m_Input->GetMouseScroll() << " at: " << m_Input->GetMousePos().first << ", " << m_Input->GetMousePos().second << '\n';
-	}
+	//if (m_Input->IsMousePressed(KC_MOUSE_BUTTON_LEFT))
+	//{
+	//	std::cout << "Mouse " << KC_MOUSE_BUTTON_LEFT << " at: " << m_Input->GetMousePos().first << ", " << m_Input->GetMousePos().second << '\n';
+	//}
 
-	if (m_Input->GetMouseScroll() < 0)
-	{
-		vp.view = glm::translate(vp.view, glm::vec3(400, 400, 0));
-		vp.view = glm::scale(vp.view, glm::vec3(0.8, 0.8, 1.0f));
-		vp.view = glm::translate(vp.view, glm::vec3(-400, -400, 0));
-	}
+	//if (m_Input->GetMouseScroll() != 0)
+	//{
+	//	std::cout << "Mouse Axis " << m_Input->GetMouseScroll() << " at: " << m_Input->GetMousePos().first << ", " << m_Input->GetMousePos().second << '\n';
+	//}
 
-	if (m_Input->GetMouseScroll() > 0)
-	{
-		vp.view = glm::translate(vp.view, glm::vec3(400, 400, 0));
-		vp.view = glm::scale(vp.view, glm::vec3(1.2, 1.2, 1.0f));
-		vp.view = glm::translate(vp.view, glm::vec3(-400, -400, 0));
-	}
+	//if (m_Input->GetMouseScroll() < 0)
+	//{
+	//	//vp.view = glm::translate(vp.view, glm::vec3(0, 200, 0));
+	//	vp.view = glm::scale(vp.view, glm::vec3(0.8, 0.8, 1.0f));
+	//	//vp.view = glm::translate(vp.view, glm::vec3(-200, -200, 0));
+	//}
 
-	if (m_Input->IsKeyHeld(KC_KEY_W))
-	{
-		vp.view = glm::translate(vp.view, glm::vec3(0, -1, 0));
-	}
+	//if (m_Input->GetMouseScroll() > 0)
+	//{
+	//	//vp.view = glm::translate(vp.view, glm::vec3(200, 200, 0));
+	//	vp.view = glm::scale(vp.view, glm::vec3(1.2, 1.2, 1.0f));
+	//	//vp.view = glm::translate(vp.view, glm::vec3(-200, -200, 0));
+	//}
 
-	if (m_Input->IsKeyHeld(KC_KEY_S))
-	{
-		vp.view = glm::translate(vp.view, glm::vec3(0, 1, 0));
-	}
+	//if (m_Input->IsKeyHeld(KC_KEY_W))
+	//{
+	//	vp.view = glm::translate(vp.view, glm::vec3(0, -1, 0));
+	//}
 
-	if (m_Input->IsKeyHeld(KC_KEY_A))
-	{
-		vp.view = glm::translate(vp.view, glm::vec3(1, 0, 0));
-	}
+	//if (m_Input->IsKeyHeld(KC_KEY_S))
+	//{
+	//	vp.view = glm::translate(vp.view, glm::vec3(0, 1, 0));
+	//}
 
-	if (m_Input->IsKeyHeld(KC_KEY_D))
-	{
-		vp.view = glm::translate(vp.view, glm::vec3(-1, 0, 0));
-	}
+	//if (m_Input->IsKeyHeld(KC_KEY_A))
+	//{
+	//	vp.view = glm::translate(vp.view, glm::vec3(1, 0, 0));
+	//}
 
-	if (m_Input->IsKeyPressed(KC_KEY_R))
-	{
-		vp.view = vp.viewInital;
-		vp.projection = vp.projectionInital;
-	}
+	//if (m_Input->IsKeyHeld(KC_KEY_D))
+	//{
+	//	vp.view = glm::translate(vp.view, glm::vec3(-1, 0, 0));
+	//}
+
+	//if (m_Input->IsKeyPressed(KC_KEY_R))
+	//{
+	//	vp.view = vp.viewInital;
+	//	vp.projection = vp.projectionInital;
+	//}
+
+	camera.Update(deltaTime);
 
 	counter += deltaTime;
 	if (counter > 0.05f)
@@ -299,7 +306,7 @@ void GameOfLife::Draw(float deltaTime)
 	shader.Bind();
 	GLCall(glUniform1f(glGetUniformLocation(shader.ID(), "u_TexIndex"), backTexture));
 
-	glm::mat4 mvp = vp.projection * vp.view * model;
+	glm::mat4 mvp = camera.GetCamera().GetViewProjectionMatrix() * model;
 	GLCall(glUniformMatrix4fv(glGetUniformLocation(shader.ID(), "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
 	glBindBuffer(GL_ARRAY_BUFFER, VB);
 	glBindVertexArray(VA);
