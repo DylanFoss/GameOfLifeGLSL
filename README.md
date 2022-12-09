@@ -13,5 +13,5 @@ This implementation stores the state of the GoL via two textures which both matc
 ## To-Do:
 
 - Allow customisation of the game parameters via keypresses/ui.
-- Add panning and zooming support.
+- Add panning and zooming support. ~ implemented in Refactor
 - Add speed controls to allow the speed up and pausing of the simulation.
