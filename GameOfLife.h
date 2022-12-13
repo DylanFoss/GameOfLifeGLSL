@@ -19,6 +19,8 @@ private:
     uint32_t m_GameWidth;
     uint32_t m_GameHeight;
 
+    bool m_IsPaused = false;
+
     glm::vec2 GetGameCell(glm::vec2 worldPosition);
 };
 

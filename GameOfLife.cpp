@@ -250,7 +250,12 @@ void GameOfLife::Update(float deltaTime)
 			}
 	}
 
-	counter += deltaTime;
+	if (Input::Get().IsKeyPressed(KC_KEY_SPACE))
+		m_IsPaused = !m_IsPaused;
+
+	if (!m_IsPaused)
+		counter += deltaTime;
+
 	if (counter > 0.05f)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, noiseBuffer);
@@ -303,7 +308,7 @@ void GameOfLife::Draw(float deltaTime)
 glm::vec2 GameOfLife::GetGameCell(glm::vec2 worldPosition)
 {
 	return glm::vec2(
-		std::floor((std::floor(worldPosition.x)) / (800 / m_GameWidth)) + 20,  
-		std::floor((std::floor(worldPosition.y)) / (800 / m_GameWidth)) + 20
+		std::floor((std::floor(worldPosition.x)) / (800 / m_GameWidth)) + m_GameWidth * 0.5f,  
+		std::floor((std::floor(worldPosition.y)) / (800 / m_GameWidth)) + m_GameHeight * 0.5f
 	);
 }
