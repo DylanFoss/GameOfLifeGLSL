@@ -18,6 +18,8 @@ private:
 
     uint32_t m_GameWidth;
     uint32_t m_GameHeight;
+
+    glm::vec2 GetGameCell(glm::vec2 worldPosition);
 };
 
 

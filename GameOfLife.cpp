@@ -211,7 +211,20 @@ void GameOfLife::Update(float deltaTime)
 {
 	camera.Update(deltaTime);
 
-	counter += deltaTime;
+	if (Input::Get().IsMousePressed(KC_MOUSE_BUTTON_LEFT))
+	{
+		glm::vec2 worldPos = camera.ScreenToWorldSpace(glm::vec2(Input::Get().GetMousePos().first, Input::Get().GetMousePos().second));
+
+		//bounds check
+		if (worldPos.x > -400 && worldPos.x < 400 )
+			if (worldPos.y > -400 && worldPos.y < 400)
+			{
+				glm::vec2 cellPosition = GetGameCell(worldPos);
+				std::cout << cellPosition.x << ", " << cellPosition.y << '\n';
+			}
+	}
+
+	/*counter += deltaTime;
 	if (counter > 0.05f)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, noiseBuffer);
@@ -236,7 +249,7 @@ void GameOfLife::Update(float deltaTime)
 		std::swap(backTexture, frontTexture);
 
 		counter = 0;
-	}
+	}*/
 
 }
 
@@ -259,4 +272,12 @@ void GameOfLife::Draw(float deltaTime)
 	glBindVertexArray(VA);
 	//glBindBuffer(GL_ARRAY_BUFFER, VB);
 	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+}
+
+glm::vec2 GameOfLife::GetGameCell(glm::vec2 worldPosition)
+{
+	return glm::vec2(
+		std::floor((std::floor(worldPosition.x)) / (800 / m_GameWidth)) + 20,  
+		std::floor((std::floor(worldPosition.y)) / (800 / m_GameWidth)) + 20
+	);
 }
