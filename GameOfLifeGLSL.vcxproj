@@ -162,6 +162,8 @@
     <None Include="basic.frag.shader" />
     <None Include="basic.vert.shader" />
     <None Include="noise.vert.shader" />
+    <None Include="Paint.frag.shader" />
+    <None Include="Paint.vert.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />

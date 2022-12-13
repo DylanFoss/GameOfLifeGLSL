@@ -56,7 +56,7 @@ unsigned int VA, VB, VA2, VB2, IB;
 
 GLuint noiseBuffer, fb;
 
-Utils::Shader shader, GoL, noise;
+Utils::Shader shader, GoL, noise, paint;
 
 GLuint renderTarget;
 
@@ -170,6 +170,12 @@ void GameOfLife::Init()
 	noise.CreateShader("noise.vert.shader", "noise.frag.shader");
 	noise.Bind();
 
+	paint.CreateShader("Paint.vert.shader", "Paint.frag.shader");
+	paint.Bind();
+	GLCall(glUniform1i(glGetUniformLocation(paint.ID(), "u_State"), 1));
+	GLCall(glUniform2f(glGetUniformLocation(paint.ID(), "u_Scale"), m_GameWidth, m_GameHeight));
+	GLCall(glUniform2f(glGetUniformLocation(paint.ID(), "u_Cell"), 0, 0));
+
 	glGenFramebuffers(1, &noiseBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, noiseBuffer);
 
@@ -221,10 +227,30 @@ void GameOfLife::Update(float deltaTime)
 			{
 				glm::vec2 cellPosition = GetGameCell(worldPos);
 				std::cout << cellPosition.x << ", " << cellPosition.y << '\n';
+
+				glBindFramebuffer(GL_FRAMEBUFFER, noiseBuffer);
+
+				glPushAttrib(GL_VIEWPORT_BIT);
+				glViewport(0, 0, m_GameWidth, m_GameHeight);
+
+				paint.Bind();
+				GLCall(glUniform1i(glGetUniformLocation(paint.ID(), "u_State"), backTexture));
+				GLCall(glUniform2f(glGetUniformLocation(paint.ID(), "u_Cell"), cellPosition.x, cellPosition.y));
+
+				glBindBuffer(GL_ARRAY_BUFFER, VB2);
+				glBindVertexArray(VA2);
+
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+				glActiveTexture(GL_TEXTURE0 + backTexture);
+				glBindTexture(GL_TEXTURE_2D, noiseBuffer);
+
+				glPopAttrib();
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			}
 	}
 
-	/*counter += deltaTime;
+	counter += deltaTime;
 	if (counter > 0.05f)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, noiseBuffer);
@@ -249,7 +275,7 @@ void GameOfLife::Update(float deltaTime)
 		std::swap(backTexture, frontTexture);
 
 		counter = 0;
-	}*/
+	}
 
 }
 
