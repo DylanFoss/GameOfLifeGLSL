@@ -9,14 +9,13 @@
 
 #include "GLErrorHandler.h"
 
-GameOfLife::GameOfLife(const std::string& name, uint32_t width, uint32_t height)
-    :Application(name, width, height)
+GameOfLife::GameOfLife(const std::string& name, uint32_t width, uint32_t height, uint32_t gameWidth, uint32_t gameHeight)
+    :Application(name, width, height), m_GameWidth(gameWidth), m_GameHeight(gameHeight)
 {
 	Init();
 }
 
 constexpr int WindowSize = 800;
-constexpr int GameSize = 800;
 
 struct Vertex
 {
@@ -46,9 +45,9 @@ Vertex vertices2[4] = {
 
 Vertex vertices[4] = {
 	{{-400, -400}, {0.0f, 0.0f}},
-	{{400, -400}, {1.0f, 0.0f}},
-	{{400, 400}, {1.0f, 1.0f}},
-	{{-400,   400}, {0.0f, 1.0f}}
+	{{ 400,  -400}, {1.0f, 0.0f}},
+	{{ 400,   400}, {1.0f, 1.0f}},
+	{{-400,  400}, {0.0f, 1.0f}}
 };
 
 unsigned int indices[6] = { 0, 1, 2, 2, 3, 0 };
@@ -67,7 +66,6 @@ glm::mat4 model;
 
 void GameOfLife::Init()
 {
-	camera.GetCamera().SetProjection(-400, 400, -400, 400);
 
 	if (glewInit() != GLEW_OK)
 		std::cout << "ERROR!" << std::endl;
@@ -138,7 +136,7 @@ void GameOfLife::Init()
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, GameSize, GameSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr));
+	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_GameWidth, m_GameHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr));
 	
 	glActiveTexture(GL_TEXTURE0 + 2);
 	GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &backTex));
@@ -147,7 +145,7 @@ void GameOfLife::Init()
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, GameSize, GameSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr));
+	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_GameWidth, m_GameHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr));
 
 	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTarget, 0);
 
@@ -166,7 +164,7 @@ void GameOfLife::Init()
 	GoL.CreateShader("GoL.vert.shader", "GoL.frag.shader");
 	GLCall(GoL.Bind());
 	GLCall(glUniform1i(glGetUniformLocation(GoL.ID(), "u_State"), 1));
-	GLCall(glUniform2f(glGetUniformLocation(GoL.ID(), "u_Scale"), GameSize, GameSize));
+	GLCall(glUniform2f(glGetUniformLocation(GoL.ID(), "u_Scale"), m_GameWidth, m_GameHeight));
 
 	//inital noise
 	noise.CreateShader("noise.vert.shader", "noise.frag.shader");
@@ -178,7 +176,7 @@ void GameOfLife::Init()
 	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frontTex, 0);
 
 	glPushAttrib(GL_VIEWPORT_BIT);
-	glViewport(0, 0, GameSize, GameSize);
+	glViewport(0, 0, m_GameWidth, m_GameHeight);
 
 	GLCall(glUseProgram(noise.ID()));
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
@@ -211,57 +209,6 @@ int frontTexture = 2;
 */
 void GameOfLife::Update(float deltaTime)
 {
-
-	//if (m_Input->IsMousePressed(KC_MOUSE_BUTTON_LEFT))
-	//{
-	//	std::cout << "Mouse " << KC_MOUSE_BUTTON_LEFT << " at: " << m_Input->GetMousePos().first << ", " << m_Input->GetMousePos().second << '\n';
-	//}
-
-	//if (m_Input->GetMouseScroll() != 0)
-	//{
-	//	std::cout << "Mouse Axis " << m_Input->GetMouseScroll() << " at: " << m_Input->GetMousePos().first << ", " << m_Input->GetMousePos().second << '\n';
-	//}
-
-	//if (m_Input->GetMouseScroll() < 0)
-	//{
-	//	//vp.view = glm::translate(vp.view, glm::vec3(0, 200, 0));
-	//	vp.view = glm::scale(vp.view, glm::vec3(0.8, 0.8, 1.0f));
-	//	//vp.view = glm::translate(vp.view, glm::vec3(-200, -200, 0));
-	//}
-
-	//if (m_Input->GetMouseScroll() > 0)
-	//{
-	//	//vp.view = glm::translate(vp.view, glm::vec3(200, 200, 0));
-	//	vp.view = glm::scale(vp.view, glm::vec3(1.2, 1.2, 1.0f));
-	//	//vp.view = glm::translate(vp.view, glm::vec3(-200, -200, 0));
-	//}
-
-	//if (m_Input->IsKeyHeld(KC_KEY_W))
-	//{
-	//	vp.view = glm::translate(vp.view, glm::vec3(0, -1, 0));
-	//}
-
-	//if (m_Input->IsKeyHeld(KC_KEY_S))
-	//{
-	//	vp.view = glm::translate(vp.view, glm::vec3(0, 1, 0));
-	//}
-
-	//if (m_Input->IsKeyHeld(KC_KEY_A))
-	//{
-	//	vp.view = glm::translate(vp.view, glm::vec3(1, 0, 0));
-	//}
-
-	//if (m_Input->IsKeyHeld(KC_KEY_D))
-	//{
-	//	vp.view = glm::translate(vp.view, glm::vec3(-1, 0, 0));
-	//}
-
-	//if (m_Input->IsKeyPressed(KC_KEY_R))
-	//{
-	//	vp.view = vp.viewInital;
-	//	vp.projection = vp.projectionInital;
-	//}
-
 	camera.Update(deltaTime);
 
 	counter += deltaTime;
@@ -270,7 +217,7 @@ void GameOfLife::Update(float deltaTime)
 		glBindFramebuffer(GL_FRAMEBUFFER, noiseBuffer);
 
 		glPushAttrib(GL_VIEWPORT_BIT);
-		glViewport(0, 0, GameSize, GameSize);
+		glViewport(0, 0, m_GameWidth, m_GameHeight);
 
 		GoL.Bind();
 		GLCall(glUniform1i(glGetUniformLocation(GoL.ID(), "u_State"), backTexture));
