@@ -7,6 +7,7 @@ class GameOfLife :
 {
 public:
     GameOfLife(const std::string& name, uint32_t width, uint32_t height, uint32_t gameWidth, uint32_t gameHeight);
+    ~GameOfLife();
 
     void Init();
     void Shutdown();
@@ -18,6 +19,9 @@ private:
 
     uint32_t m_GameWidth;
     uint32_t m_GameHeight;
+
+    uint32_t m_WindowHalfWidth;
+    uint32_t m_WindowHalfHeight;
 
     bool m_IsPaused = false;
 

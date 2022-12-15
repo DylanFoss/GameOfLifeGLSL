@@ -10,29 +10,21 @@
 #include "GLErrorHandler.h"
 
 GameOfLife::GameOfLife(const std::string& name, uint32_t width, uint32_t height, uint32_t gameWidth, uint32_t gameHeight)
-    :Application(name, width, height), m_GameWidth(gameWidth), m_GameHeight(gameHeight)
+    :Application(name, width, height), m_GameWidth(gameWidth), m_GameHeight(gameHeight), m_WindowHalfHeight(height * 0.5f), m_WindowHalfWidth(width * 0.5f)
 {
 	Init();
 }
 
-constexpr int WindowSize = 800;
+GameOfLife::~GameOfLife()
+{
+	Shutdown();
+}
 
 struct Vertex
 {
 	glm::vec2 Position;
 	glm::vec2 TexCoord;
 };
-
-struct VP
-{
-	glm::mat4 projectionInital = glm::ortho(-400.0f, 400.0f, -400.0f, 400.0f, -1.0f, 1.0f);
-	glm::mat4 viewInital = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
-
-	glm::mat4 projection = projectionInital;
-	glm::mat4 view = viewInital; 
-};
-
-VP vp;
 
 Utils::OrthographicCameraController camera = Utils::OrthographicCameraController(400.0f);
 
@@ -59,7 +51,6 @@ GLuint noiseBuffer, fb;
 Utils::Shader shader, GoL, noise, paint;
 
 GLuint renderTarget;
-
 GLuint frontTex, backTex;
 
 glm::mat4 model;
@@ -203,6 +194,18 @@ void GameOfLife::Init()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void GameOfLife::Shutdown()
+{
+	//delete shaders
+
+	//destructors handle this
+
+	//delete textures
+	glDeleteTextures(1, &frontTex);
+	glDeleteTextures(1, &backTex);
+	glDeleteTextures(1, &renderTarget);
+}
+
 float counter = 0.0f;
 
 int backTexture = 1;
@@ -308,7 +311,7 @@ void GameOfLife::Draw(float deltaTime)
 glm::vec2 GameOfLife::GetGameCell(glm::vec2 worldPosition)
 {
 	return glm::vec2(
-		std::floor((std::floor(worldPosition.x)) / (800 / m_GameWidth)) + m_GameWidth * 0.5f,  
-		std::floor((std::floor(worldPosition.y)) / (800 / m_GameWidth)) + m_GameHeight * 0.5f
+		std::floor((std::floor(worldPosition.x)) / (m_Window->GetWidth() / m_GameWidth)) + m_GameWidth * 0.5f,
+		std::floor((std::floor(worldPosition.y)) / (m_Window->GetHeight() / m_GameWidth)) + m_GameHeight * 0.5f
 	);
 }
