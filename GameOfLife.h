@@ -20,8 +20,10 @@ private:
     uint32_t m_GameWidth;
     uint32_t m_GameHeight;
 
-    uint32_t m_WindowHalfWidth;
-    uint32_t m_WindowHalfHeight;
+    int32_t m_WindowHalfWidth;
+    int32_t m_WindowHalfHeight;
+
+    Utils::OrthographicCameraController camera = Utils::OrthographicCameraController(400.0f);
 
     bool m_IsPaused = false;
 

@@ -66,7 +66,7 @@ void Utils::OrthographicCameraController::Update(float deltaTime)
 glm::vec2 Utils::OrthographicCameraController::ScreenToWorldSpace(glm::vec2 screenPoint)
 {
 	return glm::vec2(
-		((screenPoint.x - 400)) * m_Zoom + m_Camera.GetPosition().x, 
-		((-screenPoint.y + 400)) * m_Zoom + m_Camera.GetPosition().y
+		((screenPoint.x - m_AspectRatio)) * m_Zoom + m_Camera.GetPosition().x,
+		((-screenPoint.y + m_AspectRatio)) * m_Zoom + m_Camera.GetPosition().y
 	);
 }

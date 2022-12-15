@@ -6,7 +6,7 @@ namespace Utils {
 class OrthographicCameraController
 {
 public:
-	OrthographicCameraController(float aspectRatio);
+	OrthographicCameraController(float aspectRatio = 1.0f);
 
 	void Update(float deltaTime);
 

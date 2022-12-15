@@ -5,14 +5,13 @@
 #include "MouseCodes.h"
 #include "KeyCodes.h"
 
-#include "OrthographicCameraController.h";
-
 #include "GLErrorHandler.h"
 
 GameOfLife::GameOfLife(const std::string& name, uint32_t width, uint32_t height, uint32_t gameWidth, uint32_t gameHeight)
     :Application(name, width, height), m_GameWidth(gameWidth), m_GameHeight(gameHeight), m_WindowHalfHeight(height * 0.5f), m_WindowHalfWidth(width * 0.5f)
 {
 	Init();
+	camera = Utils::OrthographicCameraController(m_WindowHalfWidth);
 }
 
 GameOfLife::~GameOfLife()
@@ -24,22 +23,6 @@ struct Vertex
 {
 	glm::vec2 Position;
 	glm::vec2 TexCoord;
-};
-
-Utils::OrthographicCameraController camera = Utils::OrthographicCameraController(400.0f);
-
-Vertex vertices2[4] = {
-	{{-1.0f, -1.0f},	{0.0f, 0.0f}},
-	{{ 1.0f, -1.0f},	{1.0f, 0.0f}},
-	{{ 1.0f,  1.0f},	{1.0f, 1.0f}},
-	{{-1.0f,  1.0f},	{0.0f, 1.0f}}
-};
-
-Vertex vertices[4] = {
-	{{-400, -400}, {0.0f, 0.0f}},
-	{{ 400,  -400}, {1.0f, 0.0f}},
-	{{ 400,   400}, {1.0f, 1.0f}},
-	{{-400,  400}, {0.0f, 1.0f}}
 };
 
 unsigned int VA, VB, VA2, VB2, IB;
@@ -79,8 +62,15 @@ void GameOfLife::Init()
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB));
 	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) , indices, GL_STATIC_DRAW));
 
+	std::vector<Vertex> vertices = {
+		{{-m_WindowHalfWidth, -m_WindowHalfHeight}, {0.0f, 0.0f}},
+		{{ m_WindowHalfWidth, -m_WindowHalfHeight}, {1.0f, 0.0f}},
+		{{ m_WindowHalfWidth,  m_WindowHalfHeight}, {1.0f, 1.0f}},
+		{{-m_WindowHalfWidth,  m_WindowHalfHeight}, {0.0f, 1.0f}}
+	};
+
 	glBindBuffer(GL_ARRAY_BUFFER,VB);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*4, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex)*4, &vertices[0], GL_STATIC_DRAW);
 
 	GLCall(glEnableVertexAttribArray(VA));
 
@@ -96,9 +86,16 @@ void GameOfLife::Init()
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB));
 	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
 
+	std::vector<Vertex> vertices2 = {
+		{{-1.0f, -1.0f},	{0.0f, 0.0f}},
+		{{ 1.0f, -1.0f},	{1.0f, 0.0f}},
+		{{ 1.0f,  1.0f},	{1.0f, 1.0f}},
+		{{-1.0f,  1.0f},	{0.0f, 1.0f}}
+	};
+
 	glGenBuffers(1, &VB2);
 	glBindBuffer(GL_ARRAY_BUFFER, VB2);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4, vertices2, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4, &vertices2[0], GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(VA2);
 
@@ -225,8 +222,8 @@ void GameOfLife::Update(float deltaTime)
 		glm::vec2 worldPos = camera.ScreenToWorldSpace(glm::vec2(Input::Get().GetMousePos().first, Input::Get().GetMousePos().second));
 
 		//bounds check
-		if (worldPos.x > -400 && worldPos.x < 400 )
-			if (worldPos.y > -400 && worldPos.y < 400)
+		if (worldPos.x > -m_WindowHalfWidth && worldPos.x < m_WindowHalfWidth)
+			if (worldPos.y > -m_WindowHalfHeight && worldPos.y < m_WindowHalfHeight)
 			{
 				glm::vec2 cellPosition = GetGameCell(worldPos);
 				std::cout << cellPosition.x << ", " << cellPosition.y << '\n';
