@@ -17,6 +17,6 @@ void main() {
     if (boundOne.x && boundTwo.x)
         if (boundOne.y && boundTwo.y)
         {
-            o_Color = vec4(1.0);
+            o_Color = vec4(vec3(1 - texture(u_State, v_TexCoord).r), 1.0f);
         }
 }
