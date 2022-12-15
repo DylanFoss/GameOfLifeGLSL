@@ -16,6 +16,21 @@
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{c7136d3d-f648-4c66-9fb6-e3a42f6a2e2e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GoL">
+      <UniqueIdentifier>{aedd7222-dad6-419b-91dc-551894fe9c51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{d85e4cfe-6929-481d-94eb-6cf003891d2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Util">
+      <UniqueIdentifier>{9a59923b-6853-4fdc-8b38-e2160b990108}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Events">
+      <UniqueIdentifier>{fa761c94-ae93-44f8-82f2-9b364c738884}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Core">
+      <UniqueIdentifier>{f72e0b41-a089-4d0e-95e9-1154c50f4207}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -23,6 +38,27 @@
     </ClCompile>
     <ClCompile Include="GLErrorHandler.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOfLife.cpp">
+      <Filter>Source Files\GoL</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files\Engine\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="OrthographicCamera.cpp">
+      <Filter>Source Files\Engine\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="OrthographicCameraController.cpp">
+      <Filter>Source Files\Engine\Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -38,10 +74,73 @@
     <None Include="noise.frag.shader">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="GoL.vert.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="noise.vert.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Paint.frag.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Paint.vert.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLErrorHandler.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeStep.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOfLife.h">
+      <Filter>Source Files\GoL</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Source Files\Engine\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyEvent.h">
+      <Filter>Source Files\Engine\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseEvent.h">
+      <Filter>Source Files\Engine\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowEvent.h">
+      <Filter>Source Files\Engine\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Source Files\Engine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="GL.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="GLUtils.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyCodes.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseCodes.h">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="OrthographicCamera.h">
+      <Filter>Source Files\Engine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="OrthographicCameraController.h">
+      <Filter>Source Files\Engine\Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

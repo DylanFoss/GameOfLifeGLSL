@@ -145,17 +145,45 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="GameOfLife.cpp" />
     <ClCompile Include="GLErrorHandler.cpp" />
+    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="OrthographicCamera.cpp" />
+    <ClCompile Include="OrthographicCameraController.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GoL.frag.shader" />
+    <None Include="GoL.vert.shader" />
     <None Include="noise.frag.shader" />
     <None Include="basic.frag.shader" />
     <None Include="basic.vert.shader" />
+    <None Include="noise.vert.shader" />
+    <None Include="Paint.frag.shader" />
+    <None Include="Paint.vert.shader" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="GameOfLife.h" />
     <ClInclude Include="GLErrorHandler.h" />
+    <ClInclude Include="GL.h" />
+    <ClInclude Include="GLUtils.h" />
+    <ClInclude Include="MouseCodes.h" />
+    <ClInclude Include="KeyCodes.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="OrthographicCamera.h" />
+    <ClInclude Include="OrthographicCameraController.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="WindowEvent.h" />
+    <ClInclude Include="MouseEvent.h" />
+    <ClInclude Include="KeyEvent.h" />
+    <ClInclude Include="TimeStep.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
