@@ -42,8 +42,6 @@ Vertex vertices[4] = {
 	{{-400,  400}, {0.0f, 1.0f}}
 };
 
-unsigned int indices[6] = { 0, 1, 2, 2, 3, 0 };
-
 unsigned int VA, VB, VA2, VB2, IB;
 
 GLuint noiseBuffer, fb;
@@ -74,6 +72,8 @@ void GameOfLife::Init()
 	glBindVertexArray(VA);
 
 	glGenBuffers(1, &VB);
+
+	unsigned int indices[6] = { 0, 1, 2, 2, 3, 0 };
 
 	GLCall(glCreateBuffers(1, &IB));
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB));
