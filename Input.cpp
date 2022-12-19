@@ -75,7 +75,7 @@ void Input::MouseButtonsDown(int button)
 void Input::MouseButtonsUp(int button)
 {
 	//std::cout << "Mouse " << button << " was released.\n";
-	m_MouseStatesOld[button] = false;
+	m_MouseStates[button] = false;
 }
 
 void Input::MouseButtonsHeld()
