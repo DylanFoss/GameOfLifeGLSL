@@ -46,7 +46,7 @@ void Utils::OrthographicCameraController::Update(float deltaTime)
 	if (Input::Get().GetMouseScroll() != 0)
 	{
 		m_Zoom -= Input::Get().GetMouseScroll() * 0.1;
-		m_Zoom = std::max(m_Zoom, 0.2f);
+		m_Zoom = std::max(m_Zoom, m_MaxZoom);
 		m_Camera.SetProjection(-m_AspectRatio * m_Zoom, m_AspectRatio * m_Zoom, -m_AspectRatio * m_Zoom, m_AspectRatio * m_Zoom);
 	}
 

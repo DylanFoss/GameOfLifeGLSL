@@ -11,7 +11,6 @@ GameOfLife::GameOfLife(const std::string& name, uint32_t width, uint32_t height,
     :Application(name, width, height), m_GameWidth(gameWidth), m_GameHeight(gameHeight), m_WindowHalfHeight(height * 0.5f), m_WindowHalfWidth(width * 0.5f)
 {
 	Init();
-	camera = Utils::OrthographicCameraController(m_WindowHalfWidth);
 }
 
 GameOfLife::~GameOfLife()
@@ -51,6 +50,9 @@ void GameOfLife::Init()
 	}
 
 	m_Window.get()->SetVsync(true);
+
+	camera = Utils::OrthographicCameraController(m_WindowHalfWidth);
+	camera.SetMaxZoom(0.2f);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
