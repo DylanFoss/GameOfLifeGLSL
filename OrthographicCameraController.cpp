@@ -22,8 +22,7 @@ void Utils::OrthographicCameraController::Update(float deltaTime)
 		m_CameraPosition.y += sin(glm::radians(0.0f)) * m_CameraTranslationSpeed;
 	}
 
-	if (Input::Get().IsKeyHeld
-	(KC_KEY_W))
+	if (Input::Get().IsKeyHeld(KC_KEY_W))
 	{
 		m_CameraPosition.x += -sin(glm::radians(0.0f)) * m_CameraTranslationSpeed;
 		m_CameraPosition.y += cos(glm::radians(0.0f)) * m_CameraTranslationSpeed;
