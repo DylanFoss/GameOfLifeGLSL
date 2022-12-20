@@ -44,6 +44,14 @@ void GameOfLife::Init()
 
 	std::cout << glGetString(GL_VERSION) << '\n';
 
+	{
+		GLint size;
+		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &size);
+		std::cout << "Max texture size : " << size << '\n';
+	}
+
+	m_Window.get()->SetVsync(true);
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 
@@ -308,7 +316,7 @@ void GameOfLife::Draw(float deltaTime)
 glm::vec2 GameOfLife::GetGameCell(glm::vec2 worldPosition)
 {
 	return glm::vec2(
-		std::floor((std::floor(worldPosition.x)) / (m_Window->GetWidth() / m_GameWidth)) + m_GameWidth * 0.5f,
-		std::floor((std::floor(worldPosition.y)) / (m_Window->GetHeight() / m_GameWidth)) + m_GameHeight * 0.5f
+		std::floor((std::floor(worldPosition.x)) / (m_Window->GetWidth() / static_cast<float>(m_GameWidth))) + m_GameWidth * 0.5f,
+		std::floor((std::floor(worldPosition.y)) / (m_Window->GetHeight() / static_cast<float>(m_GameHeight))) + m_GameHeight * 0.5f
 	);
 }

@@ -20,6 +20,9 @@ int Application::Run()
 {
 	std::chrono::time_point <std::chrono::high_resolution_clock> t1, t2;
 	t1 = std::chrono::high_resolution_clock::now();
+	float windowCount = 0.0f;
+	float avgfps = 0;
+
 	while (m_Running)
 	{
 		t2 = std::chrono::high_resolution_clock::now();
@@ -33,6 +36,21 @@ int Application::Run()
 
 		m_Window->OnUpdate();
 		t1 = t2;
+
+		float fps = 1.0f / deltaTime;
+		avgfps = 0.9f * avgfps + (1.0f - 0.9f) * fps;
+		float drawTime = deltaTime * 1000;
+
+		windowCount += deltaTime;
+
+		if (windowCount > 0.1f)
+		{
+			std::stringstream ss;
+			ss.precision(4);
+			ss << "Game of Life - [ Avg. FPS: " << avgfps << ", " << "Draw Time: " << drawTime << " ms " << ']' << '\n';
+			glfwSetWindowTitle((GLFWwindow*)m_Window.get()->GetNativeWindow(), ss.str().c_str());
+			windowCount = 0;
+		}
 	}
 
 	return 0;
