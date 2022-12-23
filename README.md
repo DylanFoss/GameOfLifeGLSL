@@ -2,9 +2,13 @@
 
 An implementation of Conway's Game of Life utilising shaders with GLSL and openGL, allowing for large simulations to be run quickly on the GPU.
 
-### An 800 * 800 simulation
+## An 800 * 800 simulation
 
 ![image](https://user-images.githubusercontent.com/57671477/204124335-2af2c551-325e-4eb8-9123-fda21a277b71.png)
+
+### Demonstration
+
+https://www.youtube.com/watch?v=0dnzAxGN9AU
 
 ## How it works
 
@@ -13,11 +17,14 @@ This implementation stores the state of the GoL via two textures which both matc
 ## Controls
 
 WASD to pan camera.
+
 Space to pause simulation.
+
 Left Click to add life to or kill a cell.
+
 Mouse wheel to zoom in and out.
 
 ## To-Do:
 
 - Allow customisation of the game parameters via keypresses/ui.
-- Add speed controls to allow the speed up and pausing of the simulation. ~ pausing is in
+- Add speed controls to allow the speed up the simulation.
