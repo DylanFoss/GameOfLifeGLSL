@@ -6,7 +6,7 @@ namespace Utils {
 class OrthographicCameraController
 {
 public:
-	OrthographicCameraController(float aspectRatio = 1.0f);
+	OrthographicCameraController(float orthoX = 1.0f, float orthoY = 1.0f);
 
 	void Update(float deltaTime);
 
@@ -22,7 +22,8 @@ public:
 
 private:
 
-	float m_AspectRatio;
+	float m_OrthoX;
+	float m_OrthoY;
 	float m_Zoom = 1.0f;
 	float m_MaxZoom = 0.2f;
 
