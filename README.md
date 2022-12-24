@@ -8,7 +8,9 @@ An implementation of Conway's Game of Life utilising shaders with GLSL and openG
 
 ### Demonstration
 
-https://www.youtube.com/watch?v=0dnzAxGN9AU
+[Basic Demonstration](https://www.youtube.com/watch?v=0dnzAxGN9AU)
+
+[Gamespace Scaling Demo](https://www.youtube.com/watch?v=_ptRF3jm1ns)
 
 ## How it works
 
