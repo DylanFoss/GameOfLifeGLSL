@@ -23,6 +23,14 @@ private:
     int32_t m_WindowHalfWidth;
     int32_t m_WindowHalfHeight;
 
+    float m_GameAspect;
+
+    /* 
+    * The game aspect ratios divided by the window aspect ratio. Used to multiply the width and height
+    * for the game quad, and bound checking for user input.
+    */
+    glm::vec2 m_GameAspectRatioMultipliers;
+
     Utils::OrthographicCameraController camera = Utils::OrthographicCameraController(400.0f);
 
     bool m_IsPaused = false;

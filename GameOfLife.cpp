@@ -8,8 +8,24 @@
 #include "GLErrorHandler.h"
 
 GameOfLife::GameOfLife(const std::string& name, uint32_t width, uint32_t height, uint32_t gameWidth, uint32_t gameHeight)
-    :Application(name, width, height), m_GameWidth(gameWidth), m_GameHeight(gameHeight), m_WindowHalfHeight(height * 0.5f), m_WindowHalfWidth(width * 0.5f)
+	:Application(name, width, height), m_GameWidth(gameWidth), m_GameHeight(gameHeight), m_WindowHalfHeight(height * 0.5f), m_WindowHalfWidth(width * 0.5f)
 {
+	m_GameAspect = static_cast<float>(gameWidth) / static_cast<float>(gameHeight);
+	float windowAspect = static_cast<float>(width) / static_cast<float>(height);
+	float multiplier = m_GameAspect / windowAspect;
+
+	if (multiplier > 1)
+	{
+		multiplier = 1 / multiplier;
+		m_GameAspectRatioMultipliers.x = 1;
+		m_GameAspectRatioMultipliers.y = multiplier;
+	}
+	else
+	{
+		m_GameAspectRatioMultipliers.x = multiplier;
+		m_GameAspectRatioMultipliers.y = 1;
+	}
+
 	Init();
 }
 
@@ -51,7 +67,7 @@ void GameOfLife::Init()
 
 	m_Window.get()->SetVsync(true);
 
-	camera = Utils::OrthographicCameraController(m_WindowHalfWidth);
+	camera = Utils::OrthographicCameraController(m_WindowHalfWidth, m_WindowHalfHeight);
 	camera.SetMaxZoom(0.2f);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -73,10 +89,10 @@ void GameOfLife::Init()
 	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) , indices, GL_STATIC_DRAW));
 
 	std::vector<Vertex> vertices = {
-		{{-m_WindowHalfWidth, -m_WindowHalfHeight}, {0.0f, 0.0f}},
-		{{ m_WindowHalfWidth, -m_WindowHalfHeight}, {1.0f, 0.0f}},
-		{{ m_WindowHalfWidth,  m_WindowHalfHeight}, {1.0f, 1.0f}},
-		{{-m_WindowHalfWidth,  m_WindowHalfHeight}, {0.0f, 1.0f}}
+		{{-m_WindowHalfWidth * m_GameAspectRatioMultipliers.x, -m_WindowHalfHeight * m_GameAspectRatioMultipliers.y}, {0.0f, 0.0f}},
+		{{ m_WindowHalfWidth * m_GameAspectRatioMultipliers.x, -m_WindowHalfHeight * m_GameAspectRatioMultipliers.y}, {1.0f, 0.0f}},
+		{{ m_WindowHalfWidth * m_GameAspectRatioMultipliers.x,  m_WindowHalfHeight * m_GameAspectRatioMultipliers.y}, {1.0f, 1.0f}},
+		{{-m_WindowHalfWidth * m_GameAspectRatioMultipliers.x,  m_WindowHalfHeight * m_GameAspectRatioMultipliers.y}, {0.0f, 1.0f}}
 	};
 
 	glBindBuffer(GL_ARRAY_BUFFER,VB);
@@ -232,8 +248,8 @@ void GameOfLife::Update(float deltaTime)
 		glm::vec2 worldPos = camera.ScreenToWorldSpace(glm::vec2(Input::Get().GetMousePos().first, Input::Get().GetMousePos().second));
 
 		//bounds check
-		if (worldPos.x > -m_WindowHalfWidth && worldPos.x < m_WindowHalfWidth)
-			if (worldPos.y > -m_WindowHalfHeight && worldPos.y < m_WindowHalfHeight)
+		if (worldPos.x > -m_WindowHalfWidth*m_GameAspectRatioMultipliers.x && worldPos.x < m_WindowHalfWidth*m_GameAspectRatioMultipliers.x)
+			if (worldPos.y > -m_WindowHalfHeight* m_GameAspectRatioMultipliers.y && worldPos.y < m_WindowHalfHeight*m_GameAspectRatioMultipliers.y)
 			{
 				glm::vec2 cellPosition = GetGameCell(worldPos);
 				std::cout << cellPosition.x << ", " << cellPosition.y << '\n';
@@ -318,7 +334,7 @@ void GameOfLife::Draw(float deltaTime)
 glm::vec2 GameOfLife::GetGameCell(glm::vec2 worldPosition)
 {
 	return glm::vec2(
-		std::floor((std::floor(worldPosition.x)) / (m_Window->GetWidth() / static_cast<float>(m_GameWidth))) + m_GameWidth * 0.5f,
-		std::floor((std::floor(worldPosition.y)) / (m_Window->GetHeight() / static_cast<float>(m_GameHeight))) + m_GameHeight * 0.5f
+		std::floor((std::floor(worldPosition.x)) / ((m_Window->GetWidth() * m_GameAspectRatioMultipliers.x) / static_cast<float>(m_GameWidth))) + m_GameWidth * 0.5f,
+		std::floor((std::floor(worldPosition.y)) / ((m_Window->GetHeight() * m_GameAspectRatioMultipliers.y) / static_cast<float>(m_GameHeight))) + m_GameHeight * 0.5f
 	);
 }
