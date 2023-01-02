@@ -158,6 +158,8 @@
   <ItemGroup>
     <None Include="GoL.frag.shader" />
     <None Include="GoL.vert.shader" />
+    <None Include="grid.frag.shader" />
+    <None Include="grid.vert.shader" />
     <None Include="noise.frag.shader" />
     <None Include="basic.frag.shader" />
     <None Include="basic.vert.shader" />

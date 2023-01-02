@@ -26,6 +26,9 @@ GameOfLife::GameOfLife(const std::string& name, uint32_t width, uint32_t height,
 		m_GameAspectRatioMultipliers.y = 1;
 	}
 
+	camera = Utils::OrthographicCameraController(m_WindowHalfWidth, m_WindowHalfHeight);
+	camera.SetMaxZoom(10.0f / static_cast<float>(gameHeight));
+
 	Init();
 }
 
@@ -44,7 +47,7 @@ unsigned int VA, VB, VA2, VB2, IB;
 
 GLuint noiseBuffer, fb;
 
-Utils::Shader shader, GoL, noise, paint;
+Utils::Shader shader, GoL, noise, paint, grid;
 
 GLuint renderTarget;
 GLuint frontTex, backTex;
@@ -66,9 +69,6 @@ void GameOfLife::Init()
 	}
 
 	m_Window.get()->SetVsync(true);
-
-	camera = Utils::OrthographicCameraController(m_WindowHalfWidth, m_WindowHalfHeight);
-	camera.SetMaxZoom(0.2f);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
@@ -179,6 +179,13 @@ void GameOfLife::Init()
 	GLCall(GoL.Bind());
 	GLCall(glUniform1i(glGetUniformLocation(GoL.ID(), "u_State"), 1));
 	GLCall(glUniform2f(glGetUniformLocation(GoL.ID(), "u_Scale"), m_GameWidth, m_GameHeight));
+
+	grid.CreateShader("basic.vert.shader", "grid.frag.shader");
+	GLCall(grid.Bind());
+	GLCall(glUniform2f(glGetUniformLocation(grid.ID(), "u_Scale"), m_GameWidth/0.1, 0.1f));
+	GLCall(glUniform2f(glGetUniformLocation(grid.ID(), "u_GridDimensions"), m_GameWidth, m_GameHeight));
+	GLCall(glUniform1f(glGetUniformLocation(grid.ID(), "u_Zoom"), camera.GetZoom()));
+	GLCall(glUniformMatrix4fv(glGetUniformLocation(grid.ID(), "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
 
 	//inital noise
 	noise.CreateShader("noise.vert.shader", "noise.frag.shader");
@@ -329,6 +336,14 @@ void GameOfLife::Draw(float deltaTime)
 	glBindVertexArray(VA);
 	//glBindBuffer(GL_ARRAY_BUFFER, VB);
 	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+
+	grid.Bind();
+	GLCall(glUniformMatrix4fv(glGetUniformLocation(grid.ID(), "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
+	GLCall(glUniform1f(glGetUniformLocation(grid.ID(), "u_Zoom"), camera.GetZoom()));
+	glBindBuffer(GL_ARRAY_BUFFER, VB);
+	glBindVertexArray(VA);
+	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+
 }
 
 glm::vec2 GameOfLife::GetGameCell(glm::vec2 worldPosition)
