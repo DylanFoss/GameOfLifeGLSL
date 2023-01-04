@@ -180,11 +180,12 @@ void GameOfLife::Init()
 	GLCall(glUniform1i(glGetUniformLocation(GoL.ID(), "u_State"), 1));
 	GLCall(glUniform2f(glGetUniformLocation(GoL.ID(), "u_Scale"), m_GameWidth, m_GameHeight));
 
-	grid.CreateShader("basic.vert.shader", "grid.frag.shader");
+	grid.CreateShader("grid.vert.shader", "grid.frag.shader");
 	GLCall(grid.Bind());
-	GLCall(glUniform2f(glGetUniformLocation(grid.ID(), "u_Scale"), m_GameWidth/0.1, 0.1f));
 	GLCall(glUniform2f(glGetUniformLocation(grid.ID(), "u_GridDimensions"), m_GameWidth, m_GameHeight));
+	GLCall(glUniform2f(glGetUniformLocation(grid.ID(), "u_WindowDimensions"), m_Window->GetWidth(), m_Window->GetHeight()));
 	GLCall(glUniform1f(glGetUniformLocation(grid.ID(), "u_Zoom"), camera.GetZoom()));
+	GLCall(glUniform3f(glGetUniformLocation(grid.ID(), "u_GridColour"), 0.2f, 0.2f, 0.2f));
 	GLCall(glUniformMatrix4fv(glGetUniformLocation(grid.ID(), "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
 
 	//inital noise

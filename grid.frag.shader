@@ -5,45 +5,49 @@ layout(location = 0) out vec4 o_Color;
 
 in vec2 v_TexCoord;
 
-uniform vec2 u_Scale;
 uniform vec2 u_GridDimensions;
+uniform vec2 u_WindowDimensions;
 uniform float u_Zoom;
 
-float grid(vec2 st, float res)
+uniform vec3 u_GridColour;
+
+vec2 gridTile(vec2 uv, vec2 dimensions) 
 {
-	vec2 grid = fract(st * res);
-	return (step(res, grid.x) * step(res, grid.y));
+    uv *= dimensions;
+
+    uv.x += step(1., mod(uv.y, 2.0));
+
+    return fract(uv);
 }
 
-void main()
+float box(vec2 uv, vec2 size)
 {
-	vec2 digit_uv = v_TexCoord.xy * u_Scale.x; // scale
-	float x = grid(digit_uv, u_Scale.y); // resolution
-	o_Color.rgb = vec3(0.2);
-	o_Color.a = 1 - x;
+    size = vec2(0.5) - size * 0.5;
+    vec2 newuv = smoothstep(size, size + vec2(1e-9), uv);
+    newuv *= smoothstep(size, size + vec2(1e-9), vec2(1.0) - uv);
+    return newuv.x * newuv.y;
+}
 
-	//float blur = .5; // between 0 and .5, smaller value is more blurred
-	//if (u_GridDimensions.x * u_Zoom > 50.)
-	//{
-	//	mix(.5, .1, 1 - exp(-5 * ((u_GridDimensions.x * u_Zoom) * 0.0002)));
-	//}
+void main() 
+{
+    vec2 uv = v_TexCoord;
+    vec3 color = u_GridColour;
+    float a = 1;
 
-	//float blur = mix(1, 0, 1 - exp(-5 * ((u_GridDimensions.x * u_Zoom) * 0.0006)));
-	//float blur;
-	//if (blur < 0.1) blur = 0;
-	////else if (blur > 0.6) blur = 1;
+    // work out the number of cells to help decide how visible (if at all) the grid should be.
+    float numCells = max(u_GridDimensions.x, u_GridDimensions.y) * u_Zoom;
+    float pixelsPerCell = max(u_WindowDimensions.x, u_WindowDimensions.y) / numCells;
+    uv = gridTile(uv, u_GridDimensions);
 
-	//if (u_GridDimensions.x * u_Zoom < 50)
-	//{
-	//	blur = 1;
-	//}
-	//else
-	//{
-	//	blur = mix(1, 0, ((u_GridDimensions.x * u_Zoom) * 0.006));
-	//	if (blur < 0.1) blur = 0;
-	//}
+    float gridMask = box(uv, vec2(clamp(pixelsPerCell*0.1, 0.1, 0.9)));
+    //float gridMask = box(uv, vec2(0.5));
 
-	//float a = clamp((u_Scale.x - x - max(u_Scale.x, u_Scale.y) + 1.) * blur, .0, 1.);
-	//o_Color.rgba = mix(vec4(0.), vec4(vec3(0.2),1.0), a);
-	////o_Color.rgb = mix(vec3(0.), vec3(0.2), a);
+    color = u_GridColour;
+
+    // alpha is decided by if we are on a gridline
+    a *= (1 - gridMask);
+    a *= (mix(0, 1, pixelsPerCell * 0.1));
+
+    color = u_GridColour * (1 - gridMask);
+    o_Color = vec4(color, a);
 }
