@@ -92,6 +92,9 @@
     <None Include="grid.vert.shader">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="grid2.frag.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLErrorHandler.h">

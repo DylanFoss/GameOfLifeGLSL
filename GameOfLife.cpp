@@ -180,7 +180,7 @@ void GameOfLife::Init()
 	GLCall(glUniform1i(glGetUniformLocation(GoL.ID(), "u_State"), 1));
 	GLCall(glUniform2f(glGetUniformLocation(GoL.ID(), "u_Scale"), m_GameWidth, m_GameHeight));
 
-	grid.CreateShader("grid.vert.shader", "grid.frag.shader");
+	grid.CreateShader("grid.vert.shader", "grid2.frag.shader");
 	GLCall(grid.Bind());
 	GLCall(glUniform2f(glGetUniformLocation(grid.ID(), "u_GridDimensions"), m_GameWidth, m_GameHeight));
 	GLCall(glUniform2f(glGetUniformLocation(grid.ID(), "u_WindowDimensions"), m_Window->GetWidth(), m_Window->GetHeight()));
