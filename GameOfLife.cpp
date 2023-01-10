@@ -334,7 +334,7 @@ void GameOfLife::Draw(float deltaTime)
 glm::vec2 GameOfLife::GetGameCell(glm::vec2 worldPosition)
 {
 	return glm::vec2(
-		std::floor((std::floor(worldPosition.x)) / ((m_Window->GetWidth() * m_GameAspectRatioMultipliers.x) / static_cast<float>(m_GameWidth))) + m_GameWidth * 0.5f,
-		std::floor((std::floor(worldPosition.y)) / ((m_Window->GetHeight() * m_GameAspectRatioMultipliers.y) / static_cast<float>(m_GameHeight))) + m_GameHeight * 0.5f
+		std::floor((worldPosition.x) / ((m_Window->GetWidth() * m_GameAspectRatioMultipliers.x) / static_cast<float>(m_GameWidth))) + m_GameWidth * 0.5f,
+		std::floor((worldPosition.y) / ((m_Window->GetHeight() * m_GameAspectRatioMultipliers.y) / static_cast<float>(m_GameHeight))) + m_GameHeight * 0.5f
 	);
 }
