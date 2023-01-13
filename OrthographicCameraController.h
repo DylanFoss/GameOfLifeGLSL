@@ -18,7 +18,8 @@ public:
 	float GetMaxZoom() const { return m_MaxZoom; }
 	void SetMaxZoom(float zoom) { m_MaxZoom = zoom; }
 
-	glm::vec2 ScreenToWorldSpace(glm::vec2 point);
+	glm::vec2 ScreenToWorldSpace(glm::vec2 screenPoint);
+	glm::vec2 WorldToScreenSpace(glm::vec2 worldPoint);
 
 private:
 
