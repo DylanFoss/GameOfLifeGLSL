@@ -73,7 +73,7 @@ glm::vec2 Utils::OrthographicCameraController::ScreenToWorldSpace(glm::vec2 scre
 glm::vec2 Utils::OrthographicCameraController::WorldToScreenSpace(glm::vec2 worldPoint)
 {
 	return glm::vec2(
-		((worldPoint.x + m_OrthoX) - m_Camera.GetPosition().x) / m_Zoom,
-		((worldPoint.y + m_OrthoY) - m_Camera.GetPosition().y) / m_Zoom
+		static_cast<int>(((worldPoint.x + m_OrthoX) - m_Camera.GetPosition().x) / m_Zoom),
+		static_cast<int>(((worldPoint.y + m_OrthoY) - m_Camera.GetPosition().y) / m_Zoom)
 	);
 }
