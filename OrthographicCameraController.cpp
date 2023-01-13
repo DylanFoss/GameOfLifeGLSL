@@ -45,8 +45,21 @@ void Utils::OrthographicCameraController::Update(float deltaTime)
 
 	if (Input::Get().GetMouseScroll() != 0)
 	{
-		m_Zoom -= Input::Get().GetMouseScroll() * 0.1;
+
+		auto pos = Input::Get().GetMousePos();
+		glm::vec2 preZoomMousePosition = ScreenToWorldSpace(glm::vec2(pos.first, pos.second));
+
+		//actual zoom performed here
+
+		m_Zoom -= Input::Get().GetMouseScroll() * 0.01;
 		m_Zoom = std::max(m_Zoom, m_MaxZoom);
+
+		pos = Input::Get().GetMousePos();
+		glm::vec2 postZoomMousePosition = ScreenToWorldSpace(glm::vec2(pos.first, pos.second));
+
+		m_CameraPosition.x -= postZoomMousePosition.x - preZoomMousePosition.x;
+		m_CameraPosition.y -= postZoomMousePosition.y - preZoomMousePosition.y;
+
 		m_Camera.SetProjection(-m_OrthoX * m_Zoom, m_OrthoX * m_Zoom, -m_OrthoY * m_Zoom, m_OrthoY * m_Zoom);
 	}
 
