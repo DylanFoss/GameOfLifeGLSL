@@ -28,6 +28,8 @@ private:
 	float m_Zoom = 1.0f;
 	float m_MaxZoom = 0.2f;
 
+	glm::vec2 m_LastHeldMousePosition;
+
 	OrthographicCamera m_Camera;
 
 	glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };

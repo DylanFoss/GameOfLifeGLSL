@@ -33,6 +33,22 @@ void Utils::OrthographicCameraController::Update(float deltaTime)
 		m_CameraPosition.y -= cos(glm::radians(0.0f)) * m_CameraTranslationSpeed;
 	}
 
+	if (Input::Get().IsMousePressed(KC_MOUSE_BUTTON_MIDDLE))
+	{
+		m_LastHeldMousePosition = glm::vec2{ Input::Get().GetMousePos().first, Input::Get().GetMousePos().second };
+	}
+
+	if (Input::Get().IsMouseHeld(KC_MOUSE_BUTTON_MIDDLE))
+	{
+		glm::vec2 LatestHeldMousePosition = glm::vec2(Input::Get().GetMousePos().first, Input::Get().GetMousePos().second);
+		glm::vec2 ScreenPointVector = ScreenToWorldSpace(m_LastHeldMousePosition) - ScreenToWorldSpace(LatestHeldMousePosition);
+
+		m_CameraPosition.x += ScreenPointVector.x;
+		m_CameraPosition.y += ScreenPointVector.y;
+
+		m_LastHeldMousePosition = glm::vec2{ Input::Get().GetMousePos().first, Input::Get().GetMousePos().second };
+	}
+
 	if (Input::Get().IsMousePressed(KC_MOUSE_BUTTON_LEFT))
 	{
 		std::pair<int, int> pair = Input::Get().GetMousePos();
