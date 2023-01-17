@@ -180,7 +180,7 @@ void GameOfLife::Init()
 	GLCall(glUniform1i(glGetUniformLocation(GoL.ID(), "u_State"), 1));
 	GLCall(glUniform2f(glGetUniformLocation(GoL.ID(), "u_Scale"), m_GameWidth, m_GameHeight));
 
-	grid.CreateShader("grid.vert.shader", "grid2.frag.shader");
+	grid.CreateShader("grid.vert.shader", "grid.frag.shader");
 	GLCall(grid.Bind());
 	GLCall(glUniform2f(glGetUniformLocation(grid.ID(), "u_GridDimensions"), m_GameWidth, m_GameHeight));
 	GLCall(glUniform2f(glGetUniformLocation(grid.ID(), "u_WindowDimensions"), m_Window->GetWidth(), m_Window->GetHeight()));
@@ -338,12 +338,15 @@ void GameOfLife::Draw(float deltaTime)
 	//glBindBuffer(GL_ARRAY_BUFFER, VB);
 	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
-	grid.Bind();
-	GLCall(glUniformMatrix4fv(glGetUniformLocation(grid.ID(), "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
-	GLCall(glUniform1f(glGetUniformLocation(grid.ID(), "u_Zoom"), camera.GetZoom()));
-	glBindBuffer(GL_ARRAY_BUFFER, VB);
-	glBindVertexArray(VA);
-	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+	if (true)
+	{
+		grid.Bind();
+		GLCall(glUniformMatrix4fv(glGetUniformLocation(grid.ID(), "u_MVP"), 1, GL_FALSE, &mvp[0][0]));
+		GLCall(glUniform1f(glGetUniformLocation(grid.ID(), "u_Zoom"), camera.GetZoom()));
+		glBindBuffer(GL_ARRAY_BUFFER, VB);
+		glBindVertexArray(VA);
+		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+	}
 
 }
 
