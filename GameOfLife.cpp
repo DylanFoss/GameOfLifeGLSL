@@ -290,6 +290,9 @@ void GameOfLife::Update(float deltaTime)
 	if (!m_IsPaused)
 		counter += deltaTime;
 
+	if (Input::Get().IsKeyPressed(KC_KEY_G))
+		m_IsGridded = !m_IsGridded;
+
 	if (counter > 0.05f)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, noiseBuffer);
@@ -338,7 +341,7 @@ void GameOfLife::Draw(float deltaTime)
 	//glBindBuffer(GL_ARRAY_BUFFER, VB);
 	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
-	if (true)
+	if (m_IsGridded)
 	{
 		grid.Bind();
 		GLCall(glUniformMatrix4fv(glGetUniformLocation(grid.ID(), "u_MVP"), 1, GL_FALSE, &mvp[0][0]));

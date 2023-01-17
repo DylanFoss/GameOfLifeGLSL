@@ -34,6 +34,7 @@ private:
     Utils::OrthographicCameraController camera = Utils::OrthographicCameraController(400.0f);
 
     bool m_IsPaused = false;
+    bool m_IsGridded = false;
 
     glm::vec2 GetGameCell(glm::vec2 worldPosition);
 };
