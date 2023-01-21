@@ -166,7 +166,7 @@ void GameOfLife::Init()
 	model = glm::mat4(1.0f);
 
 	glm::mat4 mvp = camera.GetCamera().GetViewProjectionMatrix() * model;
-	shader.CreateShader("basic.vert.shader", "basic.frag.shader");
+	shader.CreateShader("basic.vert.shader", "GoLBasic.frag.shader");
 
 	shader.Bind();
 	int sampler[3] = {0,1,2};
