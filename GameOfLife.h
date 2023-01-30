@@ -6,7 +6,7 @@ class GameOfLife :
     public Application
 {
 public:
-    GameOfLife(const std::string& name, uint32_t width, uint32_t height, uint32_t gameWidth, uint32_t gameHeight);
+    GameOfLife(const std::string& name, uint32_t width, uint32_t height, uint32_t gameWidth, uint32_t gameHeight, const std::string& mode);
     ~GameOfLife();
 
     void Init();
@@ -24,6 +24,8 @@ private:
     int32_t m_WindowHalfHeight;
 
     float m_GameAspect;
+
+    std::string m_Mode;
 
     /* 
     * The game aspect ratios divided by the window aspect ratio. Used to multiply the width and height
