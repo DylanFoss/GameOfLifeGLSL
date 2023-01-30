@@ -35,7 +35,7 @@ This implementation stores the state of the GoL via two textures which both matc
 | --- | --- |  --- |
 | 1&2 | Width and height of window, capped to monitors size. | Positive integer value (default: 800) |
 | 3&4 | Width and height of simulation game space | Positive integer value (default: 800) |
-| 5 | Rendering mode of simul;ation, affects how the simulation looks | 'Basic', 'Trails' or 'Heatmap' (default: 'Basic') |
+| 5 | Rendering mode of simulation, affects how the simulation looks | 'Basic', 'Trails' or 'Heatmap' (default: 'Basic') |
 
 ## Planned Features:
 
