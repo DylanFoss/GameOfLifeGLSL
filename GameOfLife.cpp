@@ -8,10 +8,10 @@
 #include "GLErrorHandler.h"
 
 GameOfLife::GameOfLife(const std::string& name, uint32_t width, uint32_t height, uint32_t gameWidth, uint32_t gameHeight)
-	:Application(name, width, height), m_GameWidth(gameWidth), m_GameHeight(gameHeight), m_WindowHalfHeight(height * 0.5f), m_WindowHalfWidth(width * 0.5f)
+	:Application(name, width, height), m_GameWidth(gameWidth), m_GameHeight(gameHeight), m_WindowHalfHeight(m_Window->GetHeight() * 0.5f), m_WindowHalfWidth(m_Window->GetWidth() * 0.5f)
 {
 	m_GameAspect = static_cast<float>(gameWidth) / static_cast<float>(gameHeight);
-	float windowAspect = static_cast<float>(width) / static_cast<float>(height);
+	float windowAspect = static_cast<float>(m_Window->GetWidth()) / static_cast<float>(m_Window->GetHeight());
 	float multiplier = m_GameAspect / windowAspect;
 
 	if (multiplier > 1)
